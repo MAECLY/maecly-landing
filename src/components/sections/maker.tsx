@@ -21,8 +21,8 @@ export function Maker({ t }: { t: Dictionary }) {
             <Image
               src="/people/miguel.webp"
               alt={t.maker.photoAlt}
-              width={480}
-              height={480}
+              width={960}
+              height={960}
               sizes="(min-width: 1024px) 420px, 90vw"
               className="aspect-square h-auto w-full object-cover"
             />
