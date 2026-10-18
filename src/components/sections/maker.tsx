@@ -6,8 +6,8 @@ import { ExternalMark, SectionHead } from "../ui";
 export function Maker({ t }: { t: Dictionary }) {
   const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
   const links = [
-    { href: PORTFOLIO_URL, label: `${t.maker.portfolio} · miguel.maecly.com`, primary: true },
-    { href: MIGUEL.github, label: "GitHub · MigelAngelEC" },
+    { href: PORTFOLIO_URL, label: t.maker.portfolio, title: "miguel.maecly.com", primary: true },
+    { href: MIGUEL.github, label: "GitHub", title: "github.com/MigelAngelEC" },
     { href: MIGUEL.linkedin, label: "LinkedIn" },
   ];
 
@@ -26,6 +26,8 @@ export function Maker({ t }: { t: Dictionary }) {
               sizes="(min-width: 1024px) 420px, 90vw"
               className="aspect-square h-auto w-full object-cover"
             />
+            {/* Petrol duotone, so the photo sits inside the brand palette. */}
+            <span className="maker-tone pointer-events-none absolute inset-0" aria-hidden="true" />
             <span className="absolute right-4 top-4 size-5 rounded-[5px] bg-gold" aria-hidden="true" />
           </div>
           <figcaption className="mt-3 font-mono text-xs text-muted">{t.maker.role}</figcaption>
@@ -58,6 +60,7 @@ export function Maker({ t }: { t: Dictionary }) {
               <li key={l.href}>
                 <a
                   href={l.href}
+                  title={"title" in l ? l.title : undefined}
                   {...ext}
                   className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
                     l.primary ? "bg-accent text-on-accent hover:opacity-90" : "border border-line hover:border-line-strong"
