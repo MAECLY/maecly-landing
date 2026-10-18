@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  experimental: {
+    // Unmatched URLs get the branded 404 (the root layout is under [lang]).
+    globalNotFound: true,
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {
