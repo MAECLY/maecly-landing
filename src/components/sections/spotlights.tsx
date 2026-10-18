@@ -89,7 +89,7 @@ export function Spotlights({ lang, t }: { lang: Locale; t: Dictionary }) {
                       width={1280}
                       height={800}
                       sizes="(min-width: 1024px) 640px, 100vw"
-                      className={shot.dark ? "shot-light h-auto w-full" : "h-auto w-full"}
+                      className={shot.dark ? "shot-light aspect-[16/10] h-auto w-full" : "aspect-[16/10] h-auto w-full"}
                     />
                     {shot.dark && (
                       <Image
@@ -98,7 +98,7 @@ export function Spotlights({ lang, t }: { lang: Locale; t: Dictionary }) {
                         width={1280}
                         height={800}
                         sizes="(min-width: 1024px) 640px, 100vw"
-                        className="shot-dark h-auto w-full"
+                        className="shot-dark aspect-[16/10] h-auto w-full"
                       />
                     )}
                   </div>

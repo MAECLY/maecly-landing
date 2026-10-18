@@ -91,7 +91,7 @@ export default async function BrandPage({ params }: PageProps<"/[lang]/brand">) 
                   width={v.wide ? 280 : 96}
                   height={v.wide ? 64 : 96}
                   unoptimized
-                  className={v.wide ? "h-16 w-auto" : v.file.includes("solid") ? "size-16 [image-rendering:pixelated]" : "size-24"}
+                  className={v.wide ? "h-16 w-[280px] max-w-full object-contain" : v.file.includes("solid") ? "size-16 [image-rendering:pixelated]" : "size-24"}
                 />
               </div>
               <div className="flex flex-wrap items-center justify-between gap-2 p-4">
@@ -141,8 +141,8 @@ export default async function BrandPage({ params }: PageProps<"/[lang]/brand">) 
                 </div>
               ))}
               <div className="flex flex-col items-center gap-2">
-                <Image src="/brand/wordmark.svg" alt="" width={72} height={16} unoptimized className="shot-light h-auto w-[72px]" />
-                <Image src="/brand/wordmark-dark.svg" alt="" width={72} height={16} unoptimized className="shot-dark h-auto w-[72px]" />
+                <Image src="/brand/wordmark.svg" alt="" width={72} height={16} unoptimized className="shot-light h-4 w-[72px]" />
+                <Image src="/brand/wordmark-dark.svg" alt="" width={72} height={16} unoptimized className="shot-dark h-4 w-[72px]" />
                 <span className="font-mono text-[11px] text-muted">72 px</span>
               </div>
             </div>
