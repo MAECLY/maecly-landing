@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { productBySlug } from "@/data/products";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { ProductIcon } from "../product-icon";
 import { ExternalMark, SectionHead } from "../ui";
 
 type Shot = { light: string; dark?: string };
@@ -34,7 +35,7 @@ export function Spotlights({ lang, t }: { lang: Locale; t: Dictionary }) {
             >
               <div className={`reveal lg:col-span-5 ${flip ? "lg:order-2" : ""}`}>
                 <div className="flex items-center gap-3">
-                  <Image src={p.icon} alt="" width={44} height={44} unoptimized={p.icon.endsWith(".svg")} className="size-11 rounded-[22%]" />
+                  <ProductIcon src={p.icon} size={44} />
                   <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted">{copy.kicker}</p>
                 </div>
                 <h3 id={`spot-${slug}`} className="mt-5 font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">

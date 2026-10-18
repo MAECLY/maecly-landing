@@ -37,6 +37,8 @@ Single source of truth: [`src/lib/mark.ts`](../../src/lib/mark.ts). Every asset 
 | `--maecly-ink` | `#0E1A1C` | Text and wordmark on light, monochrome |
 | `--maecly-night` | `#0A1012` | Dark page background |
 
+**Gold is a fill, never text, on light surfaces.** `--maecly-quito` has a 1.59:1 contrast on `#FAF9F6` and 1.48:1 on paper, so on light backgrounds it only fills cells, pills and badges, and it is never the only sign of a state. Text on gold is ink (7:1 or more); text that needs a brand color on light surfaces uses petrol. On dark backgrounds `--maecly-quito-bright` (13:1 on night) can carry text.
+
 Mark tokens: light `--mk-1 #0B3D45 · --mk-2 #F4F1E8 · --mk-3 #F2C230` on `#FAF9F6` / ink `#0E1A1C`; dark `--mk-1 #14525C · --mk-2 #F4F1E8 · --mk-3 #FFD100` on `#0A1012` / `#ECEAE3`.
 
 **Type:** Inter Tight (display and wordmark, Bold, tracking +0.08em), Inter (text), JetBrains Mono (structure, labels, code).

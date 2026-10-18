@@ -19,7 +19,10 @@ export const BRAND_PALETTE: Array<{ token: string; name: string; hex: string; ro
     token: "--maecly-quito",
     name: "Quito",
     hex: BRAND.quito,
-    role: { en: "Accent cell. One element per view", es: "Celda acento. Un elemento por vista" },
+    role: {
+      en: "Accent cell. One element per view. Fill only on light surfaces, never text",
+      es: "Celda acento. Un elemento por vista. Sobre claro, solo como relleno, nunca texto",
+    },
   },
   {
     token: "--maecly-ink",
