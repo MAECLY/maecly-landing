@@ -47,7 +47,7 @@ const en = {
   },
   products: {
     eyebrow: "Products",
-    title: "Every product, one house.",
+    title: "The whole catalog, side by side.",
     sub: "Each product keeps its own name, icon and colors. MAECLY is the quality mark behind them.",
     tabs: "Filter products by category",
     website: "Website",
@@ -68,12 +68,12 @@ const en = {
         title: "Your SD card, with every cover.",
         body: "Coverly ROMs scans the SD card of your handheld, finds the ROMs with no cover art and fills them in. It shows a dry run before it writes anything, and every change can be undone.",
         points: ["Dry run before any write", "Undo afterwards", "Desktop app and CLI"],
-        fig: "Coverly ROMs, the library of an ES-DE card with 12,000 ROMs; the gaps are the games with no cover.",
+        fig: "Coverly ROMs on a 12,000-ROM test fixture (ES-DE layout); the gaps are games with no cover.",
       },
       pluryprint: {
         kicker: "Desktop",
         title: "Print 500 files with one right-click.",
-        body: "Pluryprint prints every file you right-click, with no 15-file Explorer limit and no Adobe. Jobs queue up, pause and resume, and a paper jam shows up as a failure, not as a finished job.",
+        body: "Pluryprint prints every file you right-click, with no 15-file Explorer limit and no Adobe. Jobs queue up, pause and resume, and a job is only marked printed once the OS queue confirms it; otherwise it ends as unconfirmed.",
         points: ["Windows and macOS", "AGPL-3.0", "Pre-alpha preview"],
         fig: "Pluryprint, the print queue with active, pending and recent jobs.",
       },
@@ -92,8 +92,8 @@ const en = {
     title: "Five rules, and where you can check them.",
     items: [
       {
-        title: "Zero telemetry, no account.",
-        body: "No analytics anywhere. The only request an app makes on its own is an update check you can turn off. Anything else goes only to a provider or source you choose.",
+        title: "No telemetry, no account.",
+        body: "Coverly ROMs, Pluryprint and Versorium say it on their own sites: no telemetry and no account. In Versorium, the only request the app makes on its own is an update check you can turn off. Anything else goes only to a provider or source you choose.",
       },
       {
         title: "Honesty you can see.",
@@ -117,7 +117,7 @@ const en = {
     eyebrow: "The maker",
     title: "Made by one person, on purpose.",
     role: "Founder and maker of MAECLY · Quito, Ecuador",
-    bio: "Miguel is a full-stack developer from Quito. Every MAECLY product started as a friction he hit himself: writing standups by hand, printing 300 files 15 at a time, ROMs with no cover art, losing a novel draft. None of them hands that friction to someone else’s server.",
+    bio: "Miguel is a full-stack developer from Quito. Every MAECLY product started as a friction he hit himself: writing standups by hand, printing 500 files 15 at a time, ROMs with no cover art, losing a novel draft. None of them fixes it by sending your files to someone else’s server.",
     nameStory: "MAECLY = MAEC (Miguel Angel Esparza Calero) + -ly. Not what gets built, but how.",
     portfolio: "Portfolio",
     nameLabel: "Where the name comes from",
@@ -259,7 +259,7 @@ const es: Dictionary = {
   },
   products: {
     eyebrow: "Productos",
-    title: "Cada producto, una casa.",
+    title: "Todo el catálogo, lado a lado.",
     sub: "Cada producto conserva su nombre, su icono y sus colores. MAECLY es el sello de calidad que los respalda.",
     tabs: "Filtrar productos por categoría",
     website: "Sitio web",
@@ -278,23 +278,23 @@ const es: Dictionary = {
       "coverly-roms": {
         kicker: "Gaming y retro",
         title: "Tu tarjeta SD, con todas sus carátulas.",
-        body: "Coverly ROMs revisa la tarjeta SD de tu consola portátil, encuentra las ROMs sin carátula y las completa. Muestra un simulacro antes de escribir nada y cada cambio se puede deshacer.",
-        points: ["Simulacro antes de escribir", "Deshacer después", "App de escritorio y CLI"],
-        fig: "Coverly ROMs, la biblioteca de una tarjeta ES-DE con 12.000 ROMs; los huecos son los juegos sin carátula.",
+        body: "Coverly ROMs revisa la tarjeta SD de tu consola portátil, encuentra las ROMs sin carátula y las completa. Muestra una simulación antes de escribir nada y cada cambio se puede deshacer.",
+        points: ["Simulación antes de escribir", "Deshacer después", "App de escritorio y CLI"],
+        fig: "Coverly ROMs con una tarjeta de prueba de 12.000 ROMs (formato ES-DE); los huecos son juegos sin carátula.",
       },
       pluryprint: {
         kicker: "Escritorio",
         title: "Imprime 500 archivos con un clic derecho.",
-        body: "Pluryprint imprime todos los archivos sobre los que haces clic derecho, sin el límite de 15 archivos del Explorador y sin Adobe. Los trabajos se encolan, se pausan y se reanudan, y un atasco de papel aparece como un fallo, no como un trabajo terminado.",
+        body: "Pluryprint imprime todos los archivos sobre los que haces clic derecho, sin el límite de 15 archivos del Explorador y sin Adobe. Los trabajos se encolan, se pausan y se reanudan, y un trabajo solo se marca como impreso cuando la cola del sistema lo confirma; si no, termina como no confirmado.",
         points: ["Windows y macOS", "AGPL-3.0", "Vista previa pre-alfa"],
         fig: "Pluryprint, la cola de impresión con trabajos activos, pendientes y recientes.",
       },
       autostand: {
-        kicker: "Herramientas dev",
+        kicker: "Herramientas para desarrolladores",
         title: "Tu standup, escrito a partir de lo que hiciste.",
-        body: "autostand lee tus commits, PRs, sesiones de programación con IA y notas, y archiva un standup estructurado cada día laborable. Usa un modelo local integrado y no necesita cuenta.",
-        points: ["Un dato que falta dice “Sin datos”, nunca 0%", "MIT", "Windows, macOS y Linux"],
-        fig: "autostand, el panel con el standup archivado para el siguiente día laborable.",
+        body: "autostand lee tus commits, PRs, sesiones de programación con IA y notas, y registra un standup estructurado cada día laborable. Usa un modelo local integrado y no necesita cuenta.",
+        points: ["Un dato faltante aparece como “Sin datos”, nunca 0%", "MIT", "Windows, macOS y Linux"],
+        fig: "autostand, el panel con el standup registrado para el siguiente día laborable.",
       },
     },
     figure: "Fig.",
@@ -304,12 +304,12 @@ const es: Dictionary = {
     title: "Cinco reglas, y dónde puedes comprobarlas.",
     items: [
       {
-        title: "Cero telemetría, sin cuenta.",
-        body: "Nada de analítica. La única petición que una app hace por su cuenta es buscar actualizaciones, y se puede desactivar. Todo lo demás va solo al proveedor o a la fuente que tú elijas.",
+        title: "Sin telemetría, sin cuenta.",
+        body: "Coverly ROMs, Pluryprint y Versorium lo dicen en sus propios sitios: sin telemetría y sin cuenta. En Versorium, la única petición que la app hace por su cuenta es buscar actualizaciones, y se puede desactivar. Todo lo demás va solo al proveedor o a la fuente que tú elijas.",
       },
       {
         title: "Honestidad visible.",
-        body: "En autostand, un dato que falta dice “Sin datos”, nunca 0%, y una fuente que falla se muestra como un fallo, no como un día tranquilo.",
+        body: "En autostand, un dato faltante aparece como “Sin datos”, nunca 0%, y una fuente que falla se muestra como un fallo, no como un día tranquilo.",
       },
       {
         title: "Primero la documentación, con ADRs.",
@@ -329,7 +329,7 @@ const es: Dictionary = {
     eyebrow: "El autor",
     title: "Hecho por una persona, a propósito.",
     role: "Fundador y autor de MAECLY · Quito, Ecuador",
-    bio: "Miguel es desarrollador full-stack en Quito. Cada producto de MAECLY nació de una fricción que él mismo vivió: escribir standups a mano, imprimir 300 archivos de 15 en 15, ROMs sin carátula, perder el borrador de una novela. Ninguno le pasa esa fricción al servidor de otra persona.",
+    bio: "Miguel es desarrollador full-stack en Quito. Cada producto de MAECLY nació de una fricción que él mismo vivió: escribir standups a mano, imprimir 500 archivos de 15 en 15, ROMs sin carátula, perder el borrador de una novela. Ninguno lo resuelve mandando tus archivos al servidor de otra persona.",
     nameStory: "MAECLY = MAEC (Miguel Angel Esparza Calero) + -ly. No es qué se construye, sino cómo.",
     portfolio: "Portafolio",
     nameLabel: "De dónde viene el nombre",
@@ -346,7 +346,7 @@ const es: Dictionary = {
   },
   press: {
     eyebrow: "Para prensa y socios",
-    title: "Escribe sobre ello, construye con ello.",
+    title: "Escribe sobre MAECLY o construye con nosotros.",
     boilerplateLabel: "Texto de presentación",
     boilerplate:
       "MAECLY es un estudio de producto de Quito, Ecuador, fundado por Miguel Angel Esparza Calero. Hace apps de escritorio local-first, herramientas para desarrolladores y utilidades de retro-gaming que mantienen los archivos y la actividad de las personas en sus propios equipos. Cada producto conserva su nombre y lleva el respaldo “by MAECLY”.",
@@ -400,9 +400,9 @@ const es: Dictionary = {
       { role: "Texto", name: "Inter", sample: "Herramientas local-first, hechas en Quito." },
       { role: "Mono", name: "JetBrains Mono", sample: "$ make verify  0°13′S" },
     ],
-    rules: "Sí y no",
-    do: "Sí",
-    dont: "No",
+    rules: "Qué hacer y qué evitar",
+    do: "Qué hacer",
+    dont: "Qué evitar",
     dos: [
       "Usa la variante oscura (campo petróleo elevado) sobre fondos oscuros.",
       "Usa la variante sólida para favicons y todo lo que mida 16 px.",

@@ -37,7 +37,7 @@ export const BRAND_PALETTE: Array<{ token: string; name: string; hex: string; ro
     token: "--maecly-quito-bright",
     name: "Quito bright",
     hex: BRAND.quitoBright,
-    role: { en: "Accent on dark; the made-in-Quito badge", es: "Acento sobre oscuro; el sello made in Quito" },
+    role: { en: "Accent on dark; the made-in-Quito badge", es: "Acento sobre oscuro; el sello Hecho en Quito" },
   },
   {
     token: "--maecly-night",

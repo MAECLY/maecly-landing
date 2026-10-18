@@ -54,7 +54,7 @@ export const products: Product[] = [
     version: "v0.1.0",
     oneLiner: {
       en: "Finds the ROMs on your handheld's SD card that have no cover art and fills them in. Dry run first, undo afterwards.",
-      es: "Encuentra las ROMs de la tarjeta SD de tu consola portátil que no tienen carátula y las completa. Primero un simulacro, y después puedes deshacer.",
+      es: "Encuentra las ROMs de la tarjeta SD de tu consola portátil que no tienen carátula y las completa. Primero una simulación, y después puedes deshacer.",
     },
     platforms: ["Windows", "macOS", "Linux"],
     platformNote: { en: "Desktop app and CLI", es: "App de escritorio y CLI" },
@@ -103,7 +103,7 @@ export const products: Product[] = [
     version: "v1.2.0",
     oneLiner: {
       en: "Your standup, written from what you actually did. Reads your commits, PRs, AI coding sessions and notes, and files a structured standup every working day.",
-      es: "Tu standup, escrito a partir de lo que de verdad hiciste. Lee tus commits, PRs, sesiones de programación con IA y notas, y archiva un standup estructurado cada día laborable.",
+      es: "Tu standup, escrito a partir de lo que de verdad hiciste. Lee tus commits, PRs, sesiones de programación con IA y notas, y registra un standup estructurado cada día laborable.",
     },
     platforms: ["Windows", "macOS", "Linux"],
     platformNote: { en: "Local model runtime, no account", es: "Modelo local, sin cuenta" },
@@ -199,7 +199,7 @@ export const products: Product[] = [
     version: "v1.5.1",
     oneLiner: {
       en: "Batch image processing for macOS on Apple Silicon, with a live before/after preview and reusable presets. Outputs WebP, JPEG, PNG or TIFF.",
-      es: "Procesamiento de imágenes por lotes para macOS en Apple Silicon, con vista previa antes/después en vivo y presets reutilizables. Exporta WebP, JPEG, PNG o TIFF.",
+      es: "Procesamiento de imágenes por lotes para macOS en Apple Silicon, con vista previa antes/después en vivo y ajustes predefinidos reutilizables. Exporta WebP, JPEG, PNG o TIFF.",
     },
     platforms: ["macOS"],
     platformNote: { en: "Apple Silicon · source private for now", es: "Apple Silicon · código privado por ahora" },
@@ -282,7 +282,7 @@ export const categories: Array<{ id: "all" | Category; label: Localized }> = [
   { id: "all", label: { en: "All", es: "Todo" } },
   { id: "desktop", label: { en: "Desktop", es: "Escritorio" } },
   { id: "gaming", label: { en: "Gaming & retro", es: "Gaming y retro" } },
-  { id: "devtools", label: { en: "Developer tools", es: "Herramientas dev" } },
+  { id: "devtools", label: { en: "Developer tools", es: "Herramientas para desarrolladores" } },
   { id: "works", label: { en: "In the works", es: "En desarrollo" } },
 ];
 
