@@ -34,6 +34,7 @@
   --danger: #b3261e;
   --grid: rgb(11 61 69 / 0.055);
   --grid-glow: rgb(11 61 69 / 0.22);
+  --icon-ring: rgb(14 26 28 / 0.08);
   --shadow: 0 1px 0 rgb(14 26 28 / 0.04), 0 12px 32px -16px rgb(14 26 28 / 0.18);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -59,6 +60,7 @@
     --danger: #f2b8b5;
     --grid: rgb(134 199 207 / 0.05);
     --grid-glow: rgb(134 199 207 / 0.26);
+    --icon-ring: rgb(236 234 227 / 0.14);
     --shadow: 0 1px 0 rgb(0 0 0 / 0.3), 0 16px 40px -18px rgb(0 0 0 / 0.7);
     color-scheme: dark;
   }
@@ -81,6 +83,7 @@
   --danger: #f2b8b5;
   --grid: rgb(134 199 207 / 0.05);
   --grid-glow: rgb(134 199 207 / 0.26);
+  --icon-ring: rgb(236 234 227 / 0.14);
   --shadow: 0 1px 0 rgb(0 0 0 / 0.3), 0 16px 40px -18px rgb(0 0 0 / 0.7);
   color-scheme: dark;
 }
@@ -404,22 +407,77 @@ img {
   display: none;
 }
 @media (prefers-reduced-motion: reduce) {
+  /* Same heading, then the static grid; the animated stage stays out. */
   .unfold {
     height: auto;
   }
   .unfold-stage {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  .unfold-stage .unfold-anim {
     display: none;
   }
   .unfold-static {
     display: block;
   }
 }
+.unfold-field {
+  position: absolute;
+  inset: 0 auto auto 0;
+  will-change: transform, opacity;
+}
 .unfold-tile {
   position: absolute;
   left: 0;
   top: 0;
-  transform-origin: 0 0;
+  transform-origin: 50% 50%;
   will-change: transform;
+  perspective: 700px;
+}
+/* Each tile is a card: the paper cell on the back, the product on the front. */
+.flip-card {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--flip, 180deg));
+}
+.flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-back {
+  transform: rotateY(180deg);
+}
+.unfold-label {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 6px);
+  width: var(--lw, 100%);
+  transform: translateX(-50%);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-align: center;
+  font-size: 10.5px;
+  line-height: 1.25;
+  font-weight: 500;
+  color: var(--muted);
+  opacity: var(--t-label, 0);
+}
+@media (min-width: 640px) {
+  .unfold-label {
+    font-size: 12px;
+  }
+}
+
+/* Product icons: a hairline edge so dark squircles separate from the page. */
+.icon-ring {
+  box-shadow: inset 0 0 0 1px var(--icon-ring);
 }
 
 /* ------------------------------------------------ misc */
