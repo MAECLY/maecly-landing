@@ -20,6 +20,10 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   const t = getDictionary(lang);
   const gh = await getGithubData();
 
+  // Latest public release per repo (releases arrive newest first, with
+  // drafts and prereleases already filtered out). No release, no version.
+  const versionOf = (repo?: string) => (repo ? gh.releases.find((r) => r.repo === repo)?.tag : undefined);
+
   const cards: CardData[] = products.map((p) => {
     const links: CardData["links"] = [];
     if (p.site) links.push({ href: p.site[lang], label: t.products.website, primary: true });
@@ -31,7 +35,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       category: p.category,
       status: statusLabel[p.status][lang],
       works: p.category === "works",
-      version: p.version,
+      version: versionOf(p.releasesRepo),
       oneLiner: p.oneLiner[lang],
       platforms: p.platforms,
       platformNote: p.platformNote?.[lang],
@@ -61,7 +65,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   tiles.length = 13;
   tiles.push({ kind: "next" });
 
-  const shippingCount = products.filter((p) => p.category !== "works").length;
+  const released = products.filter((p) => p.category !== "works");
+  const shippingCount = released.length;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -89,24 +94,30 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       {
         "@type": "ItemList",
         name: t.products.title,
-        numberOfItems: products.length,
-        itemListElement: products.map((p, i) => ({
-          "@type": "ListItem",
-          position: i + 1,
-          item: {
-            "@type": "SoftwareApplication",
-            name: p.name,
-            description: p.oneLiner[lang],
-            applicationCategory: p.category === "devtools" ? "DeveloperApplication" : p.category === "gaming" ? "GameApplication" : "DesktopEnhancementApplication",
-            operatingSystem: p.platforms.join(", "),
-            ...(p.version ? { softwareVersion: p.version } : {}),
-            ...(p.site ? { url: p.site[lang] } : {}),
-            ...(p.repo && !p.repo.endsWith("-landing") ? { codeRepository: p.repo } : {}),
-            license: p.license,
-            image: `${SITE_URL}${p.icon}`,
-            publisher: { "@id": `${SITE_URL}/#org` },
-          },
-        })),
+        numberOfItems: released.length,
+        itemListElement: released.map((p, i) => {
+          const os = p.platforms.filter((x) => x === "Windows" || x === "macOS" || x === "Linux");
+          const version = versionOf(p.releasesRepo);
+          return {
+            "@type": "ListItem",
+            position: i + 1,
+            item: {
+              "@type": "SoftwareApplication",
+              name: p.name,
+              description: p.oneLiner[lang],
+              applicationCategory:
+                p.category === "devtools" ? "DeveloperApplication" : p.category === "gaming" ? "GameApplication" : "DesktopEnhancementApplication",
+              ...(os.length ? { operatingSystem: os.join(", ") } : {}),
+              ...(p.platforms.includes("Chrome") ? { browserRequirements: "Requires Google Chrome" } : {}),
+              ...(version ? { softwareVersion: version.replace(/^v/, "") } : {}),
+              ...(p.site ? { url: p.site[lang] } : {}),
+              ...(p.repo && !p.repo.endsWith("-landing") ? { codeRepository: p.repo } : {}),
+              ...(p.spdx ? { license: `https://spdx.org/licenses/${p.spdx}.html` } : {}),
+              image: `${SITE_URL}${p.icon}`,
+              publisher: { "@id": `${SITE_URL}/#org` },
+            },
+          };
+        }),
       },
     ],
   };
