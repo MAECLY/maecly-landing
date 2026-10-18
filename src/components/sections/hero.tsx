@@ -1,3 +1,4 @@
+import { Fragment, type CSSProperties } from "react";
 import type { Release } from "@/lib/github-core";
 import { productStats, products } from "@/data/products";
 import type { Locale } from "@/i18n/config";
@@ -29,11 +30,13 @@ export function Hero({
 
   return (
     <section id="top" aria-labelledby="hero-title" className="relative isolate overflow-hidden">
+      <div className="hero-bg pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
       <div className="cell-grid cell-grid-fade pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+      <div className="hero-light pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
       <div className="hero-glow pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
       <HeroGlow targetId="top" />
 
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-12 sm:px-6 sm:pt-16 lg:grid-cols-[1.25fr_1fr] lg:gap-8 lg:pb-28 lg:pt-24">
+      <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 pb-20 pt-8 sm:gap-12 sm:px-6 sm:pt-16 lg:grid-cols-[1.25fr_1fr] lg:gap-8 lg:pb-28 lg:pt-24">
         <div>
           {latest && latestProduct && (
             <a
@@ -56,12 +59,22 @@ export function Hero({
             </a>
           )}
 
-          <p className="mt-8 font-mono text-xs uppercase tracking-[0.18em] text-muted">{t.hero.eyebrow}</p>
+          <p className="mt-8 font-mono text-xs uppercase tracking-[0.18em] text-muted">
+            <span className="sm:hidden">{t.hero.eyebrowShort}</span>
+            <span className="hidden sm:inline">{t.hero.eyebrow}</span>
+          </p>
           <h1
             id="hero-title"
             className="hero-title mt-4 font-display text-[clamp(2.75rem,8vw,5.75rem)] font-bold leading-[0.95] tracking-[-0.035em] text-balance"
           >
-            {t.hero.title}
+            {t.hero.title.split(" ").map((word, i) => (
+              <Fragment key={i}>
+                {i > 0 && " "}
+                <span className="hero-word" style={{ "--w": i } as CSSProperties}>
+                  {word}
+                </span>
+              </Fragment>
+            ))}
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty sm:text-xl">{t.hero.sub}</p>
 
@@ -81,14 +94,11 @@ export function Hero({
             </a>
           </div>
 
-          <dl className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-6 font-mono text-sm">
+          <dl className="mt-10 grid grid-cols-3 gap-x-4 gap-y-4 border-t border-line pt-6 font-mono sm:grid-cols-5">
             {statLine.map(([n, label]) => (
-              <div key={label} className="flex items-baseline gap-1.5">
-                <dt className="sr-only">{label}</dt>
-                <dd className="text-xl font-medium text-fg tabular-nums">{n}</dd>
-                <dd aria-hidden="true" className="text-muted">
-                  {label}
-                </dd>
+              <div key={label} className="flex flex-col-reverse">
+                <dt className="text-[11px] uppercase tracking-wider text-muted">{label}</dt>
+                <dd className="text-2xl font-medium text-fg tabular-nums">{n}</dd>
               </div>
             ))}
           </dl>
@@ -97,11 +107,11 @@ export function Hero({
           </p>
         </div>
 
-        <div className="relative order-first mx-auto w-full max-w-[180px] sm:max-w-[300px] lg:order-none lg:max-w-[440px]">
+        <div className="hero-mark relative order-first mx-auto w-full max-w-[120px] sm:max-w-[300px] lg:order-none lg:max-w-[440px]">
           {/* Registration marks: the mark sits on the same 8px grid as the page. */}
           <div className="hero-frame pointer-events-none absolute -inset-6 -z-10 sm:-inset-8" aria-hidden="true" />
           <Mark motion="assemble" wave label={t.hero.markLabel} />
-          <p className="mt-5 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+          <p className="mt-5 hidden text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted sm:block">
             14 · 5×4 · 0°13′S
           </p>
         </div>

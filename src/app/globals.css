@@ -586,18 +586,85 @@ img {
   background-size: 8px 8px;
   border-radius: 24%;
 }
+/* The headline rises word by word. No opacity and no blur: it is the LCP
+   element and must paint at once. */
+.hero-word {
+  display: inline-block;
+}
 @media (prefers-reduced-motion: no-preference) {
-  .hero-title {
-    animation: title-in 900ms var(--ease-out) both;
-    animation-delay: 60ms;
+  .hero-word {
+    animation: title-in 800ms var(--ease-out) both;
+    animation-delay: calc(60ms + var(--w) * 70ms);
   }
 }
-/* No opacity here: the headline is the LCP element and must paint at once. */
 @keyframes title-in {
   from {
-    transform: translate3d(0, 14px, 0);
-    filter: blur(5px);
+    transform: translate3d(0, 0.32em, 0);
   }
+}
+
+/* Hero light: a petrol-to-gold glow behind the mark that follows the pointer. */
+.hero-light {
+  background: radial-gradient(
+    560px circle at var(--mx, 74%) var(--my, 44%),
+    color-mix(in oklab, var(--maecly-quito) 13%, transparent) 0%,
+    color-mix(in oklab, var(--maecly-petrol-lift) 14%, transparent) 38%,
+    transparent 70%
+  );
+  transition: background-position 300ms var(--ease-out);
+}
+.hero-bg {
+  background: radial-gradient(90% 70% at 78% 18%, rgb(11 61 69 / 0.07), transparent 70%);
+}
+/* Dark theme: deep petrol with a fine grain instead of flat black. */
+:root[data-theme="dark"] .hero-bg {
+  background:
+    radial-gradient(85% 75% at 78% 12%, rgb(20 82 92 / 0.55), transparent 65%),
+    radial-gradient(60% 50% at 10% 100%, rgb(11 61 69 / 0.35), transparent 70%),
+    linear-gradient(180deg, #0c1b1f, var(--bg));
+}
+:root[data-theme="dark"] .hero-light {
+  background: radial-gradient(
+    560px circle at var(--mx, 74%) var(--my, 44%),
+    color-mix(in oklab, var(--maecly-quito-bright) 12%, transparent) 0%,
+    color-mix(in oklab, #86c7cf 12%, transparent) 38%,
+    transparent 70%
+  );
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero-bg {
+    background:
+      radial-gradient(85% 75% at 78% 12%, rgb(20 82 92 / 0.55), transparent 65%),
+      radial-gradient(60% 50% at 10% 100%, rgb(11 61 69 / 0.35), transparent 70%),
+      linear-gradient(180deg, #0c1b1f, var(--bg));
+  }
+  :root:not([data-theme="light"]) .hero-light {
+    background: radial-gradient(
+      560px circle at var(--mx, 74%) var(--my, 44%),
+      color-mix(in oklab, var(--maecly-quito-bright) 12%, transparent) 0%,
+      color-mix(in oklab, #86c7cf 12%, transparent) 38%,
+      transparent 70%
+    );
+  }
+}
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* The hero mark follows the pointer: each cell drifts a little, at its own
+   depth, toward it (a few px at most; the grid never breaks). */
+.hero-mark .mark-cell {
+  --depth: calc(0.55 + mod(var(--col) + var(--row), 3) * 0.25);
+  translate: calc(var(--px, 0) * var(--depth) * 4px) calc(var(--py, 0) * var(--depth) * 4px);
+  transition: translate 450ms var(--ease-out);
+}
+.hero-mark .mark-field {
+  translate: calc(var(--px, 0) * -2px) calc(var(--py, 0) * -2px);
+  transition: translate 450ms var(--ease-out);
 }
 
 /* ------------------------------------------------ dividers and cells */

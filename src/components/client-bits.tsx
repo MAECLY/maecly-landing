@@ -236,6 +236,7 @@ export function HeroGlow({ targetId }: { targetId: string }) {
   useEffect(() => {
     const el = document.getElementById(targetId);
     if (!el || reduceMotion() || !window.matchMedia("(hover: hover)").matches) return;
+    const mark = el.querySelector<HTMLElement>(".hero-mark");
     let frame = 0;
     const move = (e: PointerEvent) => {
       cancelAnimationFrame(frame);
@@ -244,9 +245,21 @@ export function HeroGlow({ targetId }: { targetId: string }) {
         el.style.setProperty("--mx", `${e.clientX - r.left}px`);
         el.style.setProperty("--my", `${e.clientY - r.top}px`);
         el.style.setProperty("--glow", "1");
+        if (mark) {
+          // Pointer offset from the mark's center, clamped to -1..1.
+          const m = mark.getBoundingClientRect();
+          const nx = Math.max(-1, Math.min(1, (e.clientX - (m.left + m.width / 2)) / (r.width / 2)));
+          const ny = Math.max(-1, Math.min(1, (e.clientY - (m.top + m.height / 2)) / (r.height / 2)));
+          mark.style.setProperty("--px", nx.toFixed(3));
+          mark.style.setProperty("--py", ny.toFixed(3));
+        }
       });
     };
-    const leave = () => el.style.setProperty("--glow", "0");
+    const leave = () => {
+      el.style.setProperty("--glow", "0");
+      mark?.style.setProperty("--px", "0");
+      mark?.style.setProperty("--py", "0");
+    };
     el.addEventListener("pointermove", move);
     el.addEventListener("pointerleave", leave);
     return () => {

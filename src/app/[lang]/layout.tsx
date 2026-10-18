@@ -11,9 +11,11 @@ import { socialMeta } from "@/lib/seo";
 import "lenis/dist/lenis.css";
 import "../globals.css";
 
-const interTight = Inter_Tight({ variable: "--font-inter-tight", subsets: ["latin"], weight: ["500", "600", "700"] });
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], weight: ["400", "500"] });
+// Only the hero's display face is preloaded: the headline is the LCP element.
+// Body and mono text render in the fallback first and swap in.
+const interTight = Inter_Tight({ variable: "--font-inter-tight", subsets: ["latin"], weight: ["700"] });
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"], preload: false });
+const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], weight: ["400", "500"], preload: false });
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));

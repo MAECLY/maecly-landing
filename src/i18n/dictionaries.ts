@@ -23,6 +23,7 @@ const en = {
   pill: { new: "New", first: "first release", read: "Release notes" },
   hero: {
     eyebrow: "MAECLY · product studio · Quito, Ecuador",
+    eyebrowShort: "Product studio · Quito",
     title: "Software that doesn’t lie.",
     sub: "Local-first tools for real frictions: at the desk, in the editor, on the handheld. Your files and your activity stay on your machine.",
     ctaProducts: "Explore products",
@@ -239,6 +240,7 @@ const es: Dictionary = {
   pill: { new: "Nuevo", first: "primera versión", read: "Notas de la versión" },
   hero: {
     eyebrow: "MAECLY · estudio de producto · Quito, Ecuador",
+    eyebrowShort: "Estudio de producto · Quito",
     title: "Software que no miente.",
     sub: "Herramientas local-first para fricciones reales: en el escritorio, en el editor y en la consola portátil. Tus archivos y tu actividad se quedan en tu equipo.",
     ctaProducts: "Ver productos",

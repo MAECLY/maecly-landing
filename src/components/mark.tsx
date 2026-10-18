@@ -48,6 +48,7 @@ export function Mark({ className = "", motion = "none", wave = false, label }: M
                 top: `${(c.y / 64) * 100}%`,
                 "--order": orderOf(c.id),
                 "--col": c.col,
+                "--row": c.row,
                 "--sx": s.sx,
                 "--sy": s.sy,
                 "--sr": s.sr,
