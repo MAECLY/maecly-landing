@@ -8,6 +8,7 @@ import { products } from "@/data/products";
 import { SITE_URL, hasLocale, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { socialMeta } from "@/lib/seo";
+import { Analytics } from "@vercel/analytics/next";
 import "lenis/dist/lenis.css";
 import "../globals.css";
 
@@ -83,6 +84,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
         <main id="main">{children}</main>
         <SiteFooter lang={lang} t={t} />
         <SmoothScroll />
+        <Analytics />
       </body>
     </html>
   );

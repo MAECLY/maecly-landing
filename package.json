@@ -13,6 +13,7 @@
     "snapshot": "node scripts/snapshot-github.mts"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "lenis": "^1.3.27",
     "next": "16.4.2",
     "react": "19.3.0",
