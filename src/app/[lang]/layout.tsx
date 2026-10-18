@@ -7,6 +7,7 @@ import { SmoothScroll, themeScript } from "@/components/client-bits";
 import { products } from "@/data/products";
 import { SITE_URL, hasLocale, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
+import { socialMeta } from "@/lib/seo";
 import "lenis/dist/lenis.css";
 import "../globals.css";
 
@@ -22,7 +23,6 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
   const { lang } = await params;
   if (!hasLocale(lang)) return {};
   const t = getDictionary(lang);
-  const og = lang === "es" ? "/brand/og-es.png" : "/brand/og.png";
   return {
     metadataBase: new URL(SITE_URL),
     title: { default: t.meta.title, template: "%s · MAECLY" },
@@ -35,22 +35,9 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
       canonical: `/${lang}`,
       languages: { en: "/en", es: "/es", "x-default": "/en" },
     },
-    openGraph: {
-      type: "website",
-      siteName: "MAECLY",
-      locale: lang === "es" ? "es_EC" : "en_US",
-      alternateLocale: lang === "es" ? ["en_US"] : ["es_EC"],
-      url: `/${lang}`,
-      title: t.meta.title,
-      description: t.meta.description,
-      images: [{ url: og, width: 1200, height: 630, alt: t.meta.ogAlt }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: t.meta.title,
-      description: t.meta.description,
-      images: [{ url: og, alt: t.meta.ogAlt }],
-    },
+    ...socialMeta(lang, t, { path: `/${lang}`, title: t.meta.title, description: t.meta.description }),
+    // Preview deployments must not compete with production in search.
+    ...(process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production" ? { robots: { index: false, follow: false } } : {}),
     icons: {
       icon: [
         { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },

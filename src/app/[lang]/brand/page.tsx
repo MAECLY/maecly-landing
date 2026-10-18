@@ -8,6 +8,7 @@ import { BRAND_PALETTE } from "@/data/brand";
 import { EMAIL, hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { CELLS, CELL_RADIUS, CELL_SIZE, MARK_RADIUS } from "@/lib/mark";
+import { socialMeta } from "@/lib/seo";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/brand">): Promise<Metadata> {
   const { lang } = await params;
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/brand">): 
       canonical: `/${lang}/brand`,
       languages: { en: "/en/brand", es: "/es/brand", "x-default": "/en/brand" },
     },
-    openGraph: { url: `/${lang}/brand`, title: t.meta.brandTitle, description: t.meta.brandDescription },
+    ...socialMeta(lang, t, { path: `/${lang}/brand`, title: t.meta.brandTitle, description: t.meta.brandDescription }),
   };
 }
 
