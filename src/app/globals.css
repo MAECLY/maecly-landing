@@ -1,0 +1,545 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   MAECLY design tokens — concept 02 "Celdas" (docs/brand/README.md)
+   Brand constants never change between themes; the semantic tokens
+   below them do.
+------------------------------------------------------------------- */
+:root {
+  --maecly-petrol: #0b3d45;
+  --maecly-petrol-lift: #14525c;
+  --maecly-paper: #f4f1e8;
+  --maecly-quito: #f2c230;
+  --maecly-quito-bright: #ffd100;
+  --maecly-ink: #0e1a1c;
+  --maecly-night: #0a1012;
+
+  /* mark */
+  --mk-1: var(--maecly-petrol);
+  --mk-2: var(--maecly-paper);
+  --mk-3: var(--maecly-quito);
+
+  /* surfaces and text (light) */
+  --bg: #faf9f6;
+  --fg: var(--maecly-ink);
+  --surface: #ffffff;
+  --surface-2: var(--maecly-paper);
+  --muted: #4c585a;
+  --line: #e3dfd4;
+  --line-strong: #cdc7b8;
+  --accent: var(--maecly-petrol);
+  --accent-ink: var(--maecly-petrol);
+  --on-accent: var(--maecly-paper);
+  --gold: var(--maecly-quito);
+  --danger: #b3261e;
+  --grid: rgb(11 61 69 / 0.055);
+  --grid-glow: rgb(11 61 69 / 0.22);
+  --shadow: 0 1px 0 rgb(14 26 28 / 0.04), 0 12px 32px -16px rgb(14 26 28 / 0.18);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --mk-1: var(--maecly-petrol-lift);
+    --mk-3: var(--maecly-quito-bright);
+    --bg: var(--maecly-night);
+    --fg: #eceae3;
+    --surface: #0f181a;
+    --surface-2: #132024;
+    --muted: #9ba7a8;
+    --line: #1d2b2e;
+    --line-strong: #2b3c40;
+    --accent: var(--maecly-petrol-lift);
+    --accent-ink: #86c7cf;
+    --on-accent: var(--maecly-paper);
+    --gold: var(--maecly-quito-bright);
+    --danger: #f2b8b5;
+    --grid: rgb(134 199 207 / 0.05);
+    --grid-glow: rgb(134 199 207 / 0.26);
+    --shadow: 0 1px 0 rgb(0 0 0 / 0.3), 0 16px 40px -18px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --mk-1: var(--maecly-petrol-lift);
+  --mk-3: var(--maecly-quito-bright);
+  --bg: var(--maecly-night);
+  --fg: #eceae3;
+  --surface: #0f181a;
+  --surface-2: #132024;
+  --muted: #9ba7a8;
+  --line: #1d2b2e;
+  --line-strong: #2b3c40;
+  --accent: var(--maecly-petrol-lift);
+  --accent-ink: #86c7cf;
+  --on-accent: var(--maecly-paper);
+  --gold: var(--maecly-quito-bright);
+  --danger: #f2b8b5;
+  --grid: rgb(134 199 207 / 0.05);
+  --grid-glow: rgb(134 199 207 / 0.26);
+  --shadow: 0 1px 0 rgb(0 0 0 / 0.3), 0 16px 40px -18px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+  --color-gold: var(--gold);
+  --color-petrol: var(--maecly-petrol);
+  --color-paper: var(--maecly-paper);
+  --color-night: var(--maecly-night);
+  --color-maecly-ink: var(--maecly-ink);
+  --color-danger: var(--danger);
+  --font-display: var(--font-inter-tight), "Inter Tight", Inter, system-ui, sans-serif;
+  --font-sans: var(--font-inter), Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ------------------------------------------------------------------ base */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+}
+::selection {
+  background: var(--maecly-petrol);
+  color: var(--maecly-paper);
+}
+:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+a {
+  text-underline-offset: 3px;
+}
+img {
+  max-width: 100%;
+}
+
+/* --------------------------------------------------------- cell grid */
+/* The 8px cell grid that runs under the whole system. */
+.cell-grid {
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+.cell-grid-fade {
+  mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* Hero: the grid lights up under the pointer (a "wave of light"). */
+.hero-glow {
+  background-image:
+    linear-gradient(to right, var(--grid-glow) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-glow) 1px, transparent 1px);
+  background-size: 8px 8px;
+  mask-image: radial-gradient(220px circle at var(--mx, 70%) var(--my, 40%), #000 0%, transparent 70%);
+  opacity: var(--glow, 0);
+  transition: opacity 400ms var(--ease-out);
+}
+
+/* --------------------------------------------------------- the mark */
+.mark {
+  position: relative;
+  aspect-ratio: 1;
+}
+.mark-field {
+  position: absolute;
+  inset: 0;
+  border-radius: 23.4375%;
+  background: var(--mk-1);
+}
+.mark-cell {
+  position: absolute;
+  width: 12.5%;
+  height: 12.5%;
+  border-radius: 25%;
+  background: var(--mk-2);
+  overflow: hidden;
+}
+.mark-cell[data-gold="true"] {
+  background: var(--mk-3);
+}
+
+/* Assembly on load: cells fall into the grid column by column (30ms
+   stagger), the gold cell lands last and pulses once. */
+@media (prefers-reduced-motion: no-preference) {
+  .mark-assemble .mark-field {
+    animation: field-in 520ms var(--ease-out) both;
+  }
+  .mark-assemble .mark-cell {
+    animation: cell-drop 640ms var(--ease-spring) both;
+    animation-delay: calc(180ms + var(--order) * 30ms);
+  }
+  .mark-assemble .mark-cell[data-gold="true"] {
+    animation:
+      cell-drop 640ms var(--ease-spring) both,
+      cell-pulse 520ms var(--ease-out) both;
+    animation-delay: calc(180ms + 14 * 30ms + 90ms), calc(180ms + 14 * 30ms + 90ms + 520ms);
+  }
+  /* Hover: a wave of light runs across the cells, left to right. */
+  .mark-wave:hover .mark-cell::after,
+  .mark-wave:focus-visible .mark-cell::after {
+    animation: cell-wave 700ms var(--ease-out) both;
+    animation-delay: calc(var(--col) * 55ms);
+  }
+}
+.mark-cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mark-assemble .mark-field,
+  .mark-assemble .mark-cell {
+    animation: fade-in 160ms linear both;
+  }
+}
+@keyframes field-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+@keyframes cell-drop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -260%, 0) scale(0.6);
+  }
+  40% {
+    opacity: 1;
+  }
+}
+@keyframes cell-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--mk-3) 70%, transparent);
+  }
+  45% {
+    transform: scale(1.22);
+    box-shadow: 0 0 0 10px color-mix(in oklab, var(--mk-3) 0%, transparent);
+  }
+}
+@keyframes cell-wave {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Footer: the scattered cells fold back into the m when it scrolls in.
+   Folded is the default, so without JavaScript the mark is whole. */
+.mark-fold .mark-cell {
+  transition:
+    transform 900ms var(--ease-spring),
+    opacity 600ms var(--ease-out);
+  transition-delay: calc(var(--order) * 35ms);
+}
+.mark-fold .mark-field {
+  transition:
+    opacity 600ms var(--ease-out),
+    transform 600ms var(--ease-out);
+  transition-delay: 200ms;
+}
+.mark-fold[data-folded="false"] .mark-cell {
+  transform: translate3d(var(--sx), var(--sy), 0) rotate(var(--sr));
+  opacity: 0.2;
+  transition-delay: 0ms;
+}
+.mark-fold[data-folded="false"] .mark-field {
+  opacity: 0;
+  transform: scale(0.9);
+  transition-delay: 0ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mark-fold .mark-cell,
+  .mark-fold .mark-field,
+  .mark-fold[data-folded="false"] .mark-cell,
+  .mark-fold[data-folded="false"] .mark-field {
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------ section reveal */
+/* Scroll-driven, no JavaScript; content is visible where unsupported. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+    }
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+}
+
+/* Divider made of cells; they light up as it scrolls through. */
+.cell-divider span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--line-strong);
+}
+.cell-divider span[data-on="true"] {
+  background: var(--accent-ink);
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cell-divider span {
+      animation: cell-light linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i) * 2%) cover calc(30% + var(--i) * 2%);
+    }
+  }
+}
+@keyframes cell-light {
+  from {
+    opacity: 0.25;
+    transform: scale(0.5);
+  }
+}
+
+/* ------------------------------------------------ product cards */
+.product-card {
+  --tint: var(--accent-light);
+  position: relative;
+  isolation: isolate;
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition:
+    transform 260ms var(--ease-out),
+    border-color 200ms var(--ease-out);
+  will-change: auto;
+}
+:root[data-theme="dark"] .product-card {
+  --tint: var(--accent-dark);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .product-card {
+    --tint: var(--accent-dark);
+  }
+}
+.product-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    380px circle at var(--x, 50%) var(--y, 0%),
+    color-mix(in oklab, var(--tint) 16%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 260ms var(--ease-out);
+}
+.product-card:hover,
+.product-card:focus-within {
+  border-color: color-mix(in oklab, var(--tint) 45%, var(--line));
+}
+.product-card:hover::before,
+.product-card:focus-within::before {
+  opacity: 1;
+}
+.product-card .tint-text {
+  color: var(--tint);
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-card {
+    transform: none !important;
+  }
+}
+
+/* ------------------------------------------------ unfold (signature) */
+.unfold {
+  height: 300svh;
+}
+.unfold-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+.unfold-static {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .unfold {
+    height: auto;
+  }
+  .unfold-stage {
+    display: none;
+  }
+  .unfold-static {
+    display: block;
+  }
+}
+.unfold-tile {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+/* ------------------------------------------------ misc */
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+.hairline {
+  border-color: var(--line);
+}
+.shot-dark {
+  display: none;
+}
+:root[data-theme="dark"] .shot-light {
+  display: none;
+}
+:root[data-theme="dark"] .shot-dark {
+  display: block;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shot-light {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .shot-dark {
+    display: block;
+  }
+}
+
+
+/* ------------------------------------------------ accents per product */
+.spotlight {
+  --tint: var(--accent-light);
+}
+:root[data-theme="dark"] .spotlight {
+  --tint: var(--accent-dark);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .spotlight {
+    --tint: var(--accent-dark);
+  }
+}
+.spot-dot {
+  background: var(--tint);
+}
+.spot-frame {
+  transition: border-color 300ms var(--ease-out);
+}
+.spotlight:hover .spot-frame {
+  border-color: color-mix(in oklab, var(--tint) 40%, var(--line));
+}
+
+/* ------------------------------------------------ hero */
+/* Registration marks at the four corners of the mark's 8px-grid plate. */
+.hero-frame {
+  --c: var(--line-strong);
+  background:
+    linear-gradient(var(--c), var(--c)) top left / 16px 1px,
+    linear-gradient(var(--c), var(--c)) top left / 1px 16px,
+    linear-gradient(var(--c), var(--c)) top right / 16px 1px,
+    linear-gradient(var(--c), var(--c)) top right / 1px 16px,
+    linear-gradient(var(--c), var(--c)) bottom left / 16px 1px,
+    linear-gradient(var(--c), var(--c)) bottom left / 1px 16px,
+    linear-gradient(var(--c), var(--c)) bottom right / 16px 1px,
+    linear-gradient(var(--c), var(--c)) bottom right / 1px 16px;
+  background-repeat: no-repeat;
+}
+.hero-frame::before {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 8px 8px;
+  border-radius: 24%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-title {
+    animation: title-in 900ms var(--ease-out) both;
+    animation-delay: 60ms;
+  }
+}
+/* No opacity here: the headline is the LCP element and must paint at once. */
+@keyframes title-in {
+  from {
+    transform: translate3d(0, 14px, 0);
+    filter: blur(5px);
+  }
+}
+
+/* ------------------------------------------------ dividers and cells */
+.cell-divider span[data-gold="true"] {
+  background: var(--gold);
+}
+.principle-cells span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 1.5px;
+  background: rgb(255 255 255 / 0.14);
+}
+.principle-cells span[data-on="true"] {
+  background: #86c7cf;
+}
+.principle-cells span[data-on="true"]:last-child {
+  background: var(--maecly-quito-bright);
+}
+.principle {
+  transition: background-color 300ms var(--ease-out);
+}
+.principle:hover {
+  background: #0f1a1d;
+}
+.press-cells {
+  background-image: radial-gradient(circle at 4px 4px, var(--maecly-paper) 1.5px, transparent 2px);
+  background-size: 16px 16px;
+  mask-image: linear-gradient(120deg, transparent 35%, #000 100%);
+}
+.maker-photo img {
+  filter: saturate(0.92);
+}
