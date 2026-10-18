@@ -132,6 +132,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <JsonLd data={jsonLd} />
       <Hero lang={lang} t={t} latest={gh.releases[0]} publicRepos={gh.publicRepos.length} />
       <CellDivider />
+      {/* The mark unfolds, three flagships up close, then the full catalog. */}
       <Unfold
         tiles={tiles}
         eyebrow={t.unfold.eyebrow}
@@ -141,6 +142,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         nextLabel={t.unfold.next}
         roomLabel={t.unfold.room}
       />
+      <Spotlights lang={lang} t={t} />
+      <CellDivider gold={9} />
 
       <section id="products" aria-labelledby="products-title" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-24 sm:px-6 sm:py-28">
         <SectionHead
@@ -167,8 +170,6 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         </div>
       </section>
 
-      <CellDivider gold={9} />
-      <Spotlights lang={lang} t={t} />
       <Principles t={t} />
       <Maker t={t} />
       <CellDivider gold={40} />
