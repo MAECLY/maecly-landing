@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-18T14:59:09.160Z",
+  "fetchedAt": "2026-10-18T18:44:27.168Z",
   "publicRepos": [
     "autostand",
     "autostand-landing-page",
@@ -9,6 +9,7 @@
     "gaming-toggles",
     "gaming-toggles-landing",
     "id-bridge-ia",
+    "image-transform-lite",
     "maecly-landing",
     "pluryprint",
     "pluryprint-landing",
@@ -17,6 +18,12 @@
     "workly-reel-landing"
   ],
   "releases": [
+    {
+      "repo": "image-transform-lite",
+      "tag": "v1.6.0",
+      "publishedAt": "2026-10-18T18:40:01Z",
+      "url": "https://github.com/MAECLY/image-transform-lite/releases/tag/v1.6.0"
+    },
     {
       "repo": "coverly-roms",
       "tag": "v0.1.0",
@@ -106,6 +113,30 @@
       "tag": "v0.1.0",
       "publishedAt": "2026-07-15T23:38:28Z",
       "url": "https://github.com/MAECLY/id-bridge-ia/releases/tag/v0.1.0"
+    },
+    {
+      "repo": "image-transform-lite",
+      "tag": "v1.5.1",
+      "publishedAt": "2026-04-27T18:33:48Z",
+      "url": "https://github.com/MAECLY/image-transform-lite/releases/tag/v1.5.1"
+    },
+    {
+      "repo": "image-transform-lite",
+      "tag": "v1.5.0",
+      "publishedAt": "2026-04-27T18:10:24Z",
+      "url": "https://github.com/MAECLY/image-transform-lite/releases/tag/v1.5.0"
+    },
+    {
+      "repo": "image-transform-lite",
+      "tag": "v1.4.0",
+      "publishedAt": "2026-04-27T13:47:59Z",
+      "url": "https://github.com/MAECLY/image-transform-lite/releases/tag/v1.4.0"
+    },
+    {
+      "repo": "image-transform-lite",
+      "tag": "v1.3.4",
+      "publishedAt": "2026-04-20T18:24:50Z",
+      "url": "https://github.com/MAECLY/image-transform-lite/releases/tag/v1.3.4"
     }
   ]
 }
