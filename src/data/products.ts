@@ -5,6 +5,14 @@
  *
  * Facts come from the org README (MAECLY/.github) and the live landings,
  * checked on 2026-10-17/18. Only public repositories are linked.
+ *
+ * Versions are not written here: products with a `releasesRepo` show the
+ * latest public GitHub release read at build time (src/lib/github.ts), and
+ * products without public releases show no version at all.
+ *
+ * Not listed on purpose: Creatix YT (creatix-yt.maecly.com). It sits outside
+ * the org README, its repo is private on a personal account and it has no
+ * public icon. Add it here only once the owner decides it belongs to MAECLY.
  */
 
 export type Localized = { en: string; es: string };
@@ -20,13 +28,13 @@ export type Product = {
   name: string;
   category: Category;
   status: Status;
-  /** Latest public version, when there is one. */
-  version?: string;
   oneLiner: Localized;
   platforms: Platform[];
   /** Extra platform detail shown after the chips (e.g. "Apple Silicon"). */
   platformNote?: Localized;
   license: string;
+  /** SPDX id of the license, when it is an OSI license (used in JSON-LD). */
+  spdx?: string;
   /** True when the source is published under an OSI license. */
   openSource: boolean;
   icon: string;
@@ -51,7 +59,6 @@ export const products: Product[] = [
     name: "Coverly ROMs",
     category: "gaming",
     status: "first-release",
-    version: "v0.1.0",
     oneLiner: {
       en: "Finds the ROMs on your handheld's SD card that have no cover art and fills them in. Dry run first, undo afterwards.",
       es: "Encuentra las ROMs de la tarjeta SD de tu consola portátil que no tienen carátula y las completa. Primero una simulación, y después puedes deshacer.",
@@ -59,6 +66,7 @@ export const products: Product[] = [
     platforms: ["Windows", "macOS", "Linux"],
     platformNote: { en: "Desktop app and CLI", es: "App de escritorio y CLI" },
     license: "AGPL-3.0",
+    spdx: "AGPL-3.0",
     openSource: true,
     icon: "/products/coverly-roms.png",
     accent: { light: "#0E5E6F", dark: "#5DB6C4" },
@@ -76,13 +84,13 @@ export const products: Product[] = [
     name: "Pluryprint",
     category: "desktop",
     status: "preview",
-    version: "v0.0.3",
     oneLiner: {
       en: "Right-click 5, 50 or 500 files and print them all. No 15-file Explorer limit, no Adobe, no $149 license.",
       es: "Clic derecho sobre 5, 50 o 500 archivos y se imprimen todos. Sin el límite de 15 archivos del Explorador, sin Adobe y sin licencias de 149 USD.",
     },
     platforms: ["Windows", "macOS"],
     license: "AGPL-3.0",
+    spdx: "AGPL-3.0",
     openSource: true,
     icon: "/products/pluryprint.png",
     accent: { light: "#C2410C", dark: "#F97316" },
@@ -100,7 +108,6 @@ export const products: Product[] = [
     name: "autostand",
     category: "devtools",
     status: "stable",
-    version: "v1.2.0",
     oneLiner: {
       en: "Your standup, written from what you actually did. Reads your commits, PRs, AI coding sessions and notes, and files a structured standup every working day.",
       es: "Tu standup, escrito a partir de lo que de verdad hiciste. Lee tus commits, PRs, sesiones de programación con IA y notas, y registra un standup estructurado cada día laborable.",
@@ -108,6 +115,7 @@ export const products: Product[] = [
     platforms: ["Windows", "macOS", "Linux"],
     platformNote: { en: "Local model runtime, no account", es: "Modelo local, sin cuenta" },
     license: "MIT",
+    spdx: "MIT",
     openSource: true,
     icon: "/products/autostand.svg",
     accent: { light: "#2563EB", dark: "#60A5FA" },
@@ -125,13 +133,13 @@ export const products: Product[] = [
     name: "Versorium",
     category: "desktop",
     status: "early",
-    version: "v0.1.2",
     oneLiner: {
       en: "Offline novel-writing app that keeps every draft as a Git snapshot. No account, no telemetry, and the AI stays off until you call it.",
       es: "App para escribir novelas sin conexión que guarda cada borrador como una instantánea de Git. Sin cuenta, sin telemetría, y la IA apagada hasta que la llames.",
     },
     platforms: ["Windows", "macOS", "Linux"],
     license: "AGPL-3.0",
+    spdx: "AGPL-3.0",
     openSource: true,
     icon: "/products/versorium.png",
     accent: { light: "#2A6F6A", dark: "#7EB8B2" },
@@ -148,7 +156,6 @@ export const products: Product[] = [
     name: "Gaming Toggles for PC",
     category: "gaming",
     status: "stable",
-    version: "v2.1.0",
     oneLiner: {
       en: "Stream Deck plugin with seven Windows 11 gaming controls on your keys: Game Mode, full-screen gaming mode, pointer precision, power plan A/B and more. No admin rights.",
       es: "Plugin de Stream Deck con siete controles de juego de Windows 11 en tus teclas: Modo Juego, modo de juego a pantalla completa, precisión del puntero, plan de energía A/B y más. Sin permisos de administrador.",
@@ -156,6 +163,7 @@ export const products: Product[] = [
     platforms: ["Windows", "Stream Deck"],
     platformNote: { en: "Windows 11", es: "Windows 11" },
     license: "MIT",
+    spdx: "MIT",
     openSource: true,
     icon: "/products/gaming-toggles.png",
     accent: { light: "#107C10", dark: "#46C246" },
@@ -172,7 +180,6 @@ export const products: Product[] = [
     name: "ID Bridge IA",
     category: "devtools",
     status: "store",
-    version: "v0.1.0",
     oneLiner: {
       en: "Chrome extension that tells AI agents driving the browser where they are: tabId, windowId, groupId, a session ID and the Chrome profile. Declares no host permissions.",
       es: "Extensión de Chrome que le dice a los agentes de IA que manejan el navegador dónde están: tabId, windowId, groupId, un ID de sesión y el perfil de Chrome. No declara permisos de host.",
@@ -196,7 +203,6 @@ export const products: Product[] = [
     name: "Image Transform Lite",
     category: "desktop",
     status: "stable",
-    version: "v1.5.1",
     oneLiner: {
       en: "Batch image processing for macOS on Apple Silicon, with a live before/after preview and reusable presets. Outputs WebP, JPEG, PNG or TIFF.",
       es: "Procesamiento de imágenes por lotes para macOS en Apple Silicon, con vista previa antes/después en vivo y ajustes predefinidos reutilizables. Exporta WebP, JPEG, PNG o TIFF.",
@@ -252,7 +258,8 @@ export const products: Product[] = [
       en: "Turns a day or a week of Git and GitHub activity into a ready-to-post proof-of-work card, with every claim linked back to its evidence.",
       es: "Convierte un día o una semana de actividad en Git y GitHub en una tarjeta de prueba de trabajo lista para publicar, con cada afirmación enlazada a su evidencia.",
     },
-    platforms: ["Windows", "macOS", "Linux"],
+    platforms: ["macOS"],
+    platformNote: { en: "Tested on macOS (Apple silicon)", es: "Probado en macOS (Apple silicon)" },
     license: "Not declared yet",
     openSource: false,
     icon: "/products/workly-reel.png",
