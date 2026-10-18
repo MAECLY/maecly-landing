@@ -11,10 +11,10 @@ import { socialMeta } from "@/lib/seo";
 import "lenis/dist/lenis.css";
 import "../globals.css";
 
-// Only the hero's display face is preloaded: the headline is the LCP element.
-// Body and mono text render in the fallback first and swap in.
+// Preload only what the first screen paints: Inter Tight 700 (the only
+// display weight) and Inter. JetBrains Mono swaps in without a preload.
 const interTight = Inter_Tight({ variable: "--font-inter-tight", subsets: ["latin"], weight: ["700"] });
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"], preload: false });
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], weight: ["400", "500"], preload: false });
 
 export function generateStaticParams() {
