@@ -58,6 +58,11 @@ const en = {
     count: "{n} shown",
     platforms: "Platforms",
     icon: "{name} icon",
+    more: {
+      title: "Room for what comes next.",
+      body: "The gold cell stays free for the next MAECLY product. Hit a friction worth fixing?",
+      cta: "Tell Miguel",
+    },
   },
   spotlight: {
     eyebrow: "In detail",
@@ -270,6 +275,11 @@ const es: Dictionary = {
     count: "{n} visibles",
     platforms: "Plataformas",
     icon: "Icono de {name}",
+    more: {
+      title: "Espacio para lo que viene.",
+      body: "La celda dorada queda libre para el próximo producto de MAECLY. ¿Tienes una fricción que valga la pena resolver?",
+      cta: "Escríbele a Miguel",
+    },
   },
   spotlight: {
     eyebrow: "En detalle",

@@ -45,8 +45,6 @@ export type Product = {
   download?: { href: string; label: Localized };
   /** GitHub repo (MAECLY/<name>) whose releases feed "Now shipping". */
   releasesRepo?: string;
-  /** Gets a larger bento cell in the "All" view. */
-  featured?: boolean;
   /** Short note for products whose icon is a placeholder. */
   iconNote?: Localized;
 };
@@ -77,7 +75,6 @@ export const products: Product[] = [
       label: { en: "Download", es: "Descargar" },
     },
     releasesRepo: "coverly-roms",
-    featured: true,
   },
   {
     slug: "pluryprint",
@@ -101,7 +98,6 @@ export const products: Product[] = [
       label: { en: "Download", es: "Descargar" },
     },
     releasesRepo: "pluryprint",
-    featured: true,
   },
   {
     slug: "autostand",
@@ -126,7 +122,6 @@ export const products: Product[] = [
       label: { en: "Download", es: "Descargar" },
     },
     releasesRepo: "autostand",
-    featured: true,
   },
   {
     slug: "versorium",
@@ -208,7 +203,7 @@ export const products: Product[] = [
       es: "Procesamiento de imágenes por lotes para macOS en Apple Silicon, con vista previa antes/después en vivo y ajustes predefinidos reutilizables. Exporta WebP, JPEG, PNG o TIFF.",
     },
     platforms: ["macOS"],
-    platformNote: { en: "Apple Silicon · source private for now", es: "Apple Silicon · código privado por ahora" },
+    platformNote: { en: "Apple Silicon · source and downloads not public yet", es: "Apple Silicon · código y descargas aún no públicos" },
     license: "MIT",
     openSource: false,
     icon: "/products/image-transform-lite.png",
@@ -225,7 +220,7 @@ export const products: Product[] = [
       es: "App nativa de la barra de menús de macOS que recupera tu conexión a internet cuando se desconecta una VPN. Compatible con más de 17 clientes VPN.",
     },
     platforms: ["macOS"],
-    platformNote: { en: "Source private for now", es: "Código privado por ahora" },
+    platformNote: { en: "Source and downloads not public yet", es: "Código y descargas aún no públicos" },
     license: "MIT",
     openSource: false,
     icon: "/products/vpn-fix.png",

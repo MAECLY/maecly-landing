@@ -25,10 +25,16 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   const versionOf = (repo?: string) => (repo ? gh.releases.find((r) => r.repo === repo)?.tag : undefined);
 
   const cards: CardData[] = products.map((p) => {
+    // The first link is the card's primary button; the rest become icon buttons.
     const links: CardData["links"] = [];
-    if (p.site) links.push({ href: p.site[lang], label: t.products.website, primary: true });
-    if (p.download) links.push({ href: p.download.href, label: p.download.label[lang] });
-    if (p.repo) links.push({ href: p.repo, label: p.repo.endsWith("-landing") ? t.products.source : t.products.github });
+    if (p.site) links.push({ href: p.site[lang], label: t.products.website, kind: "site" });
+    if (p.download) links.push({ href: p.download.href, label: p.download.label[lang], kind: "download" });
+    if (p.repo)
+      links.push(
+        p.repo.endsWith("-landing")
+          ? { href: p.repo, label: t.products.source, kind: "source" }
+          : { href: p.repo, label: t.products.github, kind: "repo" },
+      );
     return {
       slug: p.slug,
       name: p.name,
@@ -44,13 +50,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       iconNote: p.iconNote?.[lang],
       accentLight: p.accent.light,
       accentDark: p.accent.dark,
-      featured: Boolean(p.featured),
       links,
     };
   });
 
   // Fourteen cells → eleven products, two empty slots and the gold "next" cell
-  // (the gold cell is the last to land in the mark, so it is the last tile).
+  // (the unfold places the gold tile where the gold cell lands).
   const tiles: UnfoldTile[] = [
     ...products.map<UnfoldTile>((p) => ({
       kind: "product",
@@ -156,6 +161,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               external: t.a11y.external,
               platforms: t.products.platforms,
               icon: t.products.icon,
+              more: { ...t.products.more, href: `mailto:${EMAIL}` },
             }}
           />
         </div>
