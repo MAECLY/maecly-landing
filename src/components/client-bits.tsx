@@ -2,7 +2,7 @@
 
 import Lenis from "lenis";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { locales, type Locale } from "@/i18n/config";
 
@@ -21,41 +21,62 @@ export function SmoothScroll() {
 
 /* ------------------------------------------------------------ theme */
 const THEME_KEY = "maecly-theme";
+type ThemeChoice = "system" | "light" | "dark";
+const ORDER: ThemeChoice[] = ["system", "light", "dark"];
 
-export function ThemeToggle({ label, lightLabel, darkLabel }: { label: string; lightLabel: string; darkLabel: string }) {
-  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
+export type ThemeLabels = {
+  /** "Color theme: {current}. Switch to {next}." */
+  template: string;
+  system: string;
+  light: string;
+  dark: string;
+};
+
+/**
+ * Three states: follow the system, light or dark. Each click moves to the
+ * next one; "system" clears the stored override.
+ */
+export function ThemeToggle({ labels }: { labels: ThemeLabels }) {
+  const [choice, setChoice] = useState<ThemeChoice | null>(null);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const explicit = root.dataset.theme;
-    const sys = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    const explicit = document.documentElement.dataset.theme;
     // Sync with the theme the inline head script already applied.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setTheme(explicit === "light" || explicit === "dark" ? explicit : sys);
+    setChoice(explicit === "light" || explicit === "dark" ? explicit : "system");
   }, []);
 
-  const toggle = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    document.documentElement.dataset.theme = next;
+  const current = choice ?? "system";
+  const next = ORDER[(ORDER.indexOf(current) + 1) % ORDER.length];
+  const name = (c: ThemeChoice) => labels[c];
+  const text = labels.template.replace("{current}", name(current)).replace("{next}", name(next));
+
+  const cycle = () => {
+    const root = document.documentElement;
     try {
-      localStorage.setItem(THEME_KEY, next);
+      if (next === "system") localStorage.removeItem(THEME_KEY);
+      else localStorage.setItem(THEME_KEY, next);
     } catch {
       /* storage can be blocked; the choice still applies to this page */
     }
-    setTheme(next);
+    if (next === "system") delete root.dataset.theme;
+    else root.dataset.theme = next;
+    setChoice(next);
   };
 
   return (
     <button
       type="button"
-      onClick={toggle}
-      aria-label={label}
-      title={theme === "dark" ? lightLabel : darkLabel}
+      onClick={cycle}
+      aria-label={text}
+      title={text}
+      data-theme-choice={current}
       className="grid size-9 place-items-center rounded-lg border border-line text-fg transition-colors hover:border-line-strong"
     >
       <svg viewBox="0 0 16 16" className="size-4" aria-hidden="true">
-        <rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M8 1.5h3a3.5 3.5 0 0 1 3.5 3.5v6a3.5 3.5 0 0 1-3.5 3.5H8Z" fill="currentColor" />
+        <rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill={current === "dark" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5" />
+        {current === "system" && <path d="M8 1.5h3a3.5 3.5 0 0 1 3.5 3.5v6a3.5 3.5 0 0 1-3.5 3.5H8Z" fill="currentColor" />}
+        {current === "light" && <rect x="6" y="6" width="4" height="4" rx="1" fill="currentColor" />}
       </svg>
     </button>
   );
@@ -67,8 +88,9 @@ export const themeScript = `(function(){try{var t=localStorage.getItem('${THEME_
 /* ------------------------------------------------------------ language */
 export function LangSwitch({ lang, label }: { lang: Locale; label: string }) {
   const pathname = usePathname() || `/${lang}`;
+  const router = useRouter();
   return (
-    <nav aria-label={label} className="flex items-center rounded-lg border border-line p-0.5 font-mono text-xs">
+    <nav aria-label={label} className="flex items-center overflow-hidden rounded-lg border border-line font-mono text-xs">
       {locales.map((l) => {
         const href = pathname.replace(/^\/(en|es)(?=\/|$)/, `/${l}`);
         const active = l === lang;
@@ -78,8 +100,15 @@ export function LangSwitch({ lang, label }: { lang: Locale; label: string }) {
             href={href}
             hrefLang={l}
             lang={l}
+            prefetch={false}
             aria-current={active ? "page" : undefined}
-            className={`rounded-md px-2 py-1 uppercase transition-colors ${
+            onClick={(e) => {
+              // Keep the section the reader is on (e.g. #products).
+              if (active || !window.location.hash || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+              e.preventDefault();
+              router.push(href + window.location.hash);
+            }}
+            className={`inline-flex min-h-9 min-w-9 items-center justify-center px-2.5 uppercase transition-colors ${
               active ? "bg-accent text-on-accent" : "text-muted hover:text-fg"
             }`}
           >
@@ -89,6 +118,116 @@ export function LangSwitch({ lang, label }: { lang: Locale; label: string }) {
       })}
     </nav>
   );
+}
+
+/* ------------------------------------------------------------ mobile menu */
+/** Native <details> menu that also closes on a link click, Escape or a click outside. */
+export function MobileMenu({
+  label,
+  navLabel,
+  links,
+}: {
+  label: string;
+  navLabel: string;
+  links: Array<{ href: string; label: string }>;
+}) {
+  const ref = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const close = (focus: boolean) => {
+      if (!el.open) return;
+      el.open = false;
+      if (focus) el.querySelector("summary")?.focus();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close(true);
+    };
+    const onDown = (e: PointerEvent) => {
+      if (!el.contains(e.target as Node)) close(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onDown);
+    };
+  }, []);
+
+  return (
+    <details ref={ref} className="group relative lg:hidden">
+      <summary
+        className="grid size-9 cursor-pointer list-none place-items-center rounded-lg border border-line [&::-webkit-details-marker]:hidden"
+        aria-label={label}
+      >
+        <svg viewBox="0 0 16 16" className="size-4" aria-hidden="true">
+          <rect x="2" y="3" width="3" height="3" rx="0.8" fill="currentColor" />
+          <rect x="6.5" y="3" width="3" height="3" rx="0.8" fill="currentColor" />
+          <rect x="11" y="3" width="3" height="3" rx="0.8" fill="var(--gold)" />
+          <rect x="2" y="7.5" width="3" height="3" rx="0.8" fill="currentColor" />
+          <rect x="6.5" y="7.5" width="3" height="3" rx="0.8" fill="currentColor" />
+          <rect x="11" y="7.5" width="3" height="3" rx="0.8" fill="currentColor" />
+          <rect x="2" y="12" width="3" height="2" rx="0.8" fill="currentColor" />
+          <rect x="6.5" y="12" width="3" height="2" rx="0.8" fill="currentColor" />
+          <rect x="11" y="12" width="3" height="2" rx="0.8" fill="currentColor" />
+        </svg>
+      </summary>
+      <nav aria-label={navLabel} className="absolute right-0 top-12 w-56 rounded-xl border border-line bg-surface p-2 shadow-[var(--shadow)]">
+        <ul>
+          {links.map((l) => (
+            <li key={l.href}>
+              <Link
+                href={l.href}
+                prefetch={false}
+                onClick={() => {
+                  if (ref.current) ref.current.open = false;
+                }}
+                className="block rounded-lg px-3 py-2.5 text-sm hover:bg-surface-2"
+              >
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  );
+}
+
+/* ------------------------------------------------------------ header surface */
+/**
+ * Marks the header while it sits over a dark section ([data-surface=night]),
+ * so it can switch to the dark tokens instead of turning a muddy grey.
+ */
+export function HeaderSurface({ headerId }: { headerId: string }) {
+  useEffect(() => {
+    const header = document.getElementById(headerId);
+    if (!header) return;
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      const y = header.getBoundingClientRect().bottom / 2;
+      const dark = [...document.querySelectorAll<HTMLElement>("[data-surface=night]")].some((s) => {
+        const r = s.getBoundingClientRect();
+        return r.top <= y && r.bottom >= y;
+      });
+      if (dark) header.dataset.onDark = "true";
+      else delete header.dataset.onDark;
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [headerId]);
+  return null;
 }
 
 /* ------------------------------------------------------------ hero glow */

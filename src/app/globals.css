@@ -491,6 +491,25 @@ img {
   box-shadow: inset 0 0 0 1px var(--icon-ring);
 }
 
+/* ------------------------------------------------ header over dark */
+/* Over a [data-surface=night] section the header takes the dark tokens,
+   instead of mixing the light background into a muddy grey. */
+.site-header[data-on-dark="true"] {
+  --mk-1: var(--maecly-petrol-lift);
+  --mk-3: var(--maecly-quito-bright);
+  --bg: var(--maecly-night);
+  --fg: #eceae3;
+  --surface: #0f181a;
+  --surface-2: #132024;
+  --muted: #9ba7a8;
+  --line: #1d2b2e;
+  --line-strong: #2b3c40;
+  --accent: var(--maecly-petrol-lift);
+  --accent-ink: #86c7cf;
+  --gold: var(--maecly-quito-bright);
+  --shadow: 0 1px 0 rgb(0 0 0 / 0.3), 0 16px 40px -18px rgb(0 0 0 / 0.7);
+}
+
 /* ------------------------------------------------ misc */
 .text-balance {
   text-wrap: balance;
