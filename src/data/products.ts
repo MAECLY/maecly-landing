@@ -10,18 +10,17 @@
  * latest public GitHub release read at build time (src/lib/github.ts), and
  * products without public releases show no version at all.
  *
- * Not listed on purpose: Creatix YT (creatix-yt.maecly.com). It sits outside
- * the org README, its repo is private on a personal account and it has no
- * public icon. Add it here only once the owner decides it belongs to MAECLY.
+ * Creatix YT is listed without a repo link: its source is AGPL-3.0 but the
+ * repository is still private. Add `repo` once it is public under MAECLY.
  */
 
 export type Localized = { en: string; es: string };
 
-export type Category = "desktop" | "gaming" | "devtools" | "works";
+export type Category = "desktop" | "web" | "gaming" | "devtools" | "works";
 
 export type Status = "stable" | "first-release" | "early" | "preview" | "store" | "live" | "pre-beta" | "poc" | "paused";
 
-export type Platform = "Windows" | "macOS" | "Linux" | "Chrome" | "Stream Deck";
+export type Platform = "Windows" | "macOS" | "Linux" | "Web" | "Chrome" | "Stream Deck";
 
 export type Product = {
   slug: string;
@@ -218,6 +217,23 @@ export const products: Product[] = [
     releasesRepo: "image-transform-lite",
   },
   {
+    slug: "creatix",
+    name: "Creatix YT",
+    category: "web",
+    status: "live",
+    oneLiner: {
+      en: "Free tools for YouTube creators: analyze any public channel, compare up to five side by side, and polish titles, tags, descriptions and thumbnails. No ads, no account needed.",
+      es: "Herramientas gratuitas para creadores de YouTube: analiza cualquier canal público, compara hasta cinco lado a lado y pule títulos, etiquetas, descripciones y miniaturas. Sin anuncios y sin cuenta.",
+    },
+    platforms: ["Web"],
+    platformNote: { en: "English and Spanish. Source coming soon", es: "Inglés y español. Código fuente muy pronto" },
+    license: "AGPL-3.0",
+    openSource: false,
+    icon: "/products/creatix.png",
+    accent: { light: "#0E7490", dark: "#22D3EE" },
+    site: { en: "https://creatix-yt.maecly.com/en", es: "https://creatix-yt.maecly.com/es" },
+  },
+  {
     slug: "vpn-fix",
     name: "VPN Fix",
     category: "desktop",
@@ -290,6 +306,7 @@ export const products: Product[] = [
 export const categories: Array<{ id: "all" | Category; label: Localized }> = [
   { id: "all", label: { en: "All", es: "Todo" } },
   { id: "desktop", label: { en: "Desktop", es: "Escritorio" } },
+  { id: "web", label: { en: "Web", es: "Web" } },
   { id: "gaming", label: { en: "Gaming & retro", es: "Gaming y retro" } },
   { id: "devtools", label: { en: "Developer tools", es: "Herramientas para desarrolladores" } },
   { id: "works", label: { en: "In the works", es: "En desarrollo" } },
