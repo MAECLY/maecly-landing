@@ -54,7 +54,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
     };
   });
 
-  // Fourteen cells → eleven products, two empty slots and the gold "next" cell
+  // Fourteen cells → twelve products, one empty slot and the gold "next" cell
   // (the unfold places the gold tile where the gold cell lands).
   const tiles: UnfoldTile[] = [
     ...products.map<UnfoldTile>((p) => ({
@@ -111,9 +111,16 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               name: p.name,
               description: p.oneLiner[lang],
               applicationCategory:
-                p.category === "devtools" ? "DeveloperApplication" : p.category === "gaming" ? "GameApplication" : "DesktopEnhancementApplication",
+                p.category === "devtools"
+                  ? "DeveloperApplication"
+                  : p.category === "gaming"
+                    ? "GameApplication"
+                    : p.category === "web"
+                      ? "MultimediaApplication"
+                      : "DesktopEnhancementApplication",
               ...(os.length ? { operatingSystem: os.join(", ") } : {}),
               ...(p.platforms.includes("Chrome") ? { browserRequirements: "Requires Google Chrome" } : {}),
+              ...(p.platforms.includes("Web") ? { browserRequirements: "Requires a modern web browser with JavaScript" } : {}),
               ...(version ? { softwareVersion: version.replace(/^v/, "") } : {}),
               ...(p.site ? { url: p.site[lang] } : {}),
               ...(p.repo && !p.repo.endsWith("-landing") ? { codeRepository: p.repo } : {}),
