@@ -26,6 +26,13 @@ export function downloadsLabel(
   return form.replace("{n}", formatCount(n, lang));
 }
 
+/** "Oct 24, 2026" / "24 oct 2026" for a YYYY-MM-DD date (read as UTC). */
+export function formatDate(isoDay: string, lang: MetricLang): string {
+  return new Intl.DateTimeFormat(localeOf(lang), { dateStyle: "medium", timeZone: "UTC" }).format(
+    new Date(`${isoDay}T00:00:00Z`),
+  );
+}
+
 /** Sum of the known per-repo download counts for the given repos. */
 export function totalDownloads(downloads: Record<string, number> | undefined, repos: string[]): number {
   if (!downloads) return 0;

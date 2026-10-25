@@ -13,7 +13,7 @@ import { categories, products, statusLabel } from "@/data/products";
 import { EMAIL, GITHUB_ORG, MIGUEL, PORTFOLIO_URL, SITE_URL, hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { getGithubData } from "@/lib/github";
-import { downloadsLabel, totalDownloads } from "@/lib/metrics";
+import { downloadsLabel, formatCount, formatDate, totalDownloads } from "@/lib/metrics";
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
@@ -25,10 +25,33 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   // drafts and prereleases already filtered out). No release, no version.
   const versionOf = (repo?: string) => (repo ? gh.releases.find((r) => r.repo === repo)?.tag : undefined);
   // Total release-asset downloads per repo. Unknown or zero → undefined, so nothing renders.
-  const downloadsOf = (repo?: string) => {
+  const githubOf = (repo?: string) => {
     const n = repo ? gh.downloads?.[repo] : undefined;
-    return typeof n === "number" && n > 0 ? n : undefined;
+    return typeof n === "number" && n > 0 ? n : 0;
   };
+  // GitHub release downloads plus a dated store count, when the product has one.
+  const downloadsOf = (p: (typeof products)[number]) => {
+    const n = githubOf(p.releasesRepo) + (p.storeDownloads?.units ?? 0);
+    return n > 0 ? n : undefined;
+  };
+  const storeLine = (p: (typeof products)[number]) =>
+    p.storeDownloads
+      ? t.products.storeDownloads
+          .replace("{n}", formatCount(p.storeDownloads.units, lang))
+          .replace("{store}", p.storeDownloads.store)
+          .replace("{date}", formatDate(p.storeDownloads.through, lang))
+      : undefined;
+  const stores = products.flatMap((p) => (p.storeDownloads ? [p.storeDownloads] : []));
+  const totalAll =
+    totalDownloads(
+      gh.downloads,
+      products.flatMap((p) => (p.releasesRepo ? [p.releasesRepo] : [])),
+    ) + stores.reduce((n, s) => n + s.units, 0);
+  const downloadsFoot = stores.length
+    ? t.hero.stats.downloadsFoot
+        .replace("{store}", [...new Set(stores.map((s) => s.store))].join(", "))
+        .replace("{date}", formatDate(stores.map((s) => s.through).sort()[0], lang))
+    : undefined;
 
   const cards: CardData[] = products.map((p) => {
     // The first link is the card's primary button; the rest become icon buttons.
@@ -48,7 +71,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       status: statusLabel[p.status][lang],
       works: p.category === "works",
       version: versionOf(p.releasesRepo),
-      downloads: downloadsLabel(downloadsOf(p.releasesRepo), lang, t.products.downloads),
+      downloads: downloadsLabel(downloadsOf(p), lang, t.products.downloads),
+      storeDownloads: storeLine(p),
       oneLiner: p.oneLiner[lang],
       platforms: p.platforms,
       platformNote: p.platformNote?.[lang],
@@ -110,7 +134,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         itemListElement: released.map((p, i) => {
           const os = p.platforms.filter((x) => x === "Windows" || x === "macOS" || x === "Linux");
           const version = versionOf(p.releasesRepo);
-          const downloads = downloadsOf(p.releasesRepo);
+          const downloads = downloadsOf(p);
           return {
             "@type": "ListItem",
             position: i + 1,
@@ -159,10 +183,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         t={t}
         latest={gh.releases[0]}
         publicRepos={gh.publicRepos.length}
-        downloads={totalDownloads(
-          gh.downloads,
-          products.flatMap((p) => (p.releasesRepo ? [p.releasesRepo] : [])),
-        )}
+        downloads={totalAll}
+        downloadsFoot={downloadsFoot}
       />
       <CellDivider />
       {/* The mark unfolds, three flagships up close, then the full catalog. */}

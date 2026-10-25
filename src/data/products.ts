@@ -44,6 +44,12 @@ export type Product = {
   download?: { href: string; label: Localized };
   /** GitHub repo (MAECLY/<name>) whose releases feed "Now shipping". */
   releasesRepo?: string;
+  /**
+   * Downloads counted by a store with no public API, copied by hand from the
+   * store's analytics export. Dated: shown "as of" `through` (YYYY-MM-DD).
+   * Added to the product's GitHub release downloads and to the hero total.
+   */
+  storeDownloads?: { store: string; units: number; through: string };
   /** Short note for products whose icon is a placeholder. */
   iconNote?: Localized;
 };
@@ -192,6 +198,8 @@ export const products: Product[] = [
       label: { en: "Elgato Marketplace", es: "Elgato Marketplace" },
     },
     releasesRepo: "gaming-toggles",
+    // Elgato Marketplace analytics export: free product units, 2026-09-02 to 2026-10-24 inclusive.
+    storeDownloads: { store: "Elgato Marketplace", units: 324, through: "2026-10-24" },
   },
   {
     slug: "id-bridge-ia",

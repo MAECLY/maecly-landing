@@ -15,6 +15,8 @@ export type CardData = {
   version?: string;
   /** Preformatted "208 downloads"; absent when unknown or zero. */
   downloads?: string;
+  /** Dated store share of `downloads`, e.g. "324 on Elgato Marketplace · as of Oct 24, 2026". */
+  storeDownloads?: string;
   oneLiner: string;
   platforms: string[];
   platformNote?: string;
@@ -199,6 +201,7 @@ function ProductCard({ p, labels }: { p: CardData; labels: Labels }) {
           </>
         )}
       </p>
+      {p.storeDownloads && <p className="mt-1 font-mono text-[11px] text-muted">{p.storeDownloads}</p>}
 
       {/* One primary action plus icon-only secondary actions, so the row never wraps. */}
       <div className="mt-auto flex items-center gap-2 pt-5">
