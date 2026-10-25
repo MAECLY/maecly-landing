@@ -4,6 +4,8 @@
 
 # maecly-landing
 
+[![Stars](https://img.shields.io/github/stars/MAECLY/maecly-landing?style=flat-square)](https://github.com/MAECLY/maecly-landing/stargazers) [![Views](https://hits.sh/github.com/MAECLY/maecly-landing.svg?label=views&style=flat-square)](https://hits.sh/github.com/MAECLY/maecly-landing/) [![Last commit](https://img.shields.io/github/last-commit/MAECLY/maecly-landing?style=flat-square)](https://github.com/MAECLY/maecly-landing/commits/main)
+
 **[maecly.com](https://maecly.com): the landing of the MAECLY product studio.**<br>
 Software that doesn't lie. Local-first tools made in Quito, Ecuador.
 
