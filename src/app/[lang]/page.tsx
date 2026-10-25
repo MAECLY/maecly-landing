@@ -13,6 +13,7 @@ import { categories, products, statusLabel } from "@/data/products";
 import { EMAIL, GITHUB_ORG, MIGUEL, PORTFOLIO_URL, SITE_URL, hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { getGithubData } from "@/lib/github";
+import { downloadsLabel, totalDownloads } from "@/lib/metrics";
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
@@ -23,6 +24,11 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   // Latest public release per repo (releases arrive newest first, with
   // drafts and prereleases already filtered out). No release, no version.
   const versionOf = (repo?: string) => (repo ? gh.releases.find((r) => r.repo === repo)?.tag : undefined);
+  // Total release-asset downloads per repo. Unknown or zero → undefined, so nothing renders.
+  const downloadsOf = (repo?: string) => {
+    const n = repo ? gh.downloads?.[repo] : undefined;
+    return typeof n === "number" && n > 0 ? n : undefined;
+  };
 
   const cards: CardData[] = products.map((p) => {
     // The first link is the card's primary button; the rest become icon buttons.
@@ -42,6 +48,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       status: statusLabel[p.status][lang],
       works: p.category === "works",
       version: versionOf(p.releasesRepo),
+      downloads: downloadsLabel(downloadsOf(p.releasesRepo), lang, t.products.downloads),
       oneLiner: p.oneLiner[lang],
       platforms: p.platforms,
       platformNote: p.platformNote?.[lang],
@@ -103,6 +110,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         itemListElement: released.map((p, i) => {
           const os = p.platforms.filter((x) => x === "Windows" || x === "macOS" || x === "Linux");
           const version = versionOf(p.releasesRepo);
+          const downloads = downloadsOf(p.releasesRepo);
           return {
             "@type": "ListItem",
             position: i + 1,
@@ -125,6 +133,15 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               ...(p.site ? { url: p.site[lang] } : {}),
               ...(p.repo && !p.repo.endsWith("-landing") ? { codeRepository: p.repo } : {}),
               ...(p.spdx ? { license: `https://spdx.org/licenses/${p.spdx}.html` } : {}),
+              ...(downloads
+                ? {
+                    interactionStatistic: {
+                      "@type": "InteractionCounter",
+                      interactionType: "https://schema.org/DownloadAction",
+                      userInteractionCount: downloads,
+                    },
+                  }
+                : {}),
               image: `${SITE_URL}${p.icon}`,
               publisher: { "@id": `${SITE_URL}/#org` },
             },
@@ -137,7 +154,16 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <Hero lang={lang} t={t} latest={gh.releases[0]} publicRepos={gh.publicRepos.length} />
+      <Hero
+        lang={lang}
+        t={t}
+        latest={gh.releases[0]}
+        publicRepos={gh.publicRepos.length}
+        downloads={totalDownloads(
+          gh.downloads,
+          products.flatMap((p) => (p.releasesRepo ? [p.releasesRepo] : [])),
+        )}
+      />
       <CellDivider />
       {/* The mark unfolds, three flagships up close, then the full catalog. */}
       <Unfold
@@ -171,6 +197,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               external: t.a11y.external,
               platforms: t.products.platforms,
               icon: t.products.icon,
+              downloadsNote: t.products.downloadsNote,
               more: { ...t.products.more, href: `mailto:${EMAIL}` },
             }}
           />

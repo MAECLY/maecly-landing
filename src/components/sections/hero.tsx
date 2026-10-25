@@ -1,5 +1,6 @@
 import { Fragment, type CSSProperties } from "react";
 import type { Release } from "@/lib/github-core";
+import { formatCount } from "@/lib/metrics";
 import { productStats, products } from "@/data/products";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -12,21 +13,25 @@ export function Hero({
   t,
   latest,
   publicRepos,
+  downloads,
 }: {
   lang: Locale;
   t: Dictionary;
   latest?: Release;
   publicRepos: number;
+  /** Total GitHub release downloads; the stat is hidden unless it is above zero. */
+  downloads: number;
 }) {
   const stats = productStats();
   const latestProduct = latest ? products.find((p) => p.releasesRepo === latest.repo) : undefined;
-  const statLine: Array<[number, string]> = [
+  const statLine: Array<[number, string, string?]> = [
     [stats.total, t.hero.stats.products],
     [stats.shipping, t.hero.stats.shipping],
     [stats.openSource, t.hero.stats.openSource],
     [publicRepos, t.hero.stats.repos],
     [stats.platforms.length, t.hero.stats.platforms],
   ];
+  if (downloads > 0) statLine.push([downloads, t.hero.stats.downloads, t.hero.stats.downloadsNote]);
 
   return (
     <section id="top" aria-labelledby="hero-title" className="relative isolate overflow-hidden">
@@ -94,11 +99,15 @@ export function Hero({
             </a>
           </div>
 
-          <dl className="mt-10 grid grid-cols-3 gap-x-4 gap-y-4 border-t border-line pt-6 font-mono sm:grid-cols-5">
-            {statLine.map(([n, label]) => (
-              <div key={label} className="flex flex-col-reverse">
+          <dl
+            className={`mt-10 grid grid-cols-3 gap-x-4 gap-y-4 border-t border-line pt-6 font-mono ${
+              statLine.length > 5 ? "sm:grid-cols-6" : "sm:grid-cols-5"
+            }`}
+          >
+            {statLine.map(([n, label, note]) => (
+              <div key={label} className="flex flex-col-reverse justify-end" title={note}>
                 <dt className="text-[11px] uppercase tracking-wider text-muted">{label}</dt>
-                <dd className="text-2xl font-medium text-fg tabular-nums">{n}</dd>
+                <dd className="text-2xl font-medium text-fg tabular-nums">{formatCount(n, lang)}</dd>
               </div>
             ))}
           </dl>

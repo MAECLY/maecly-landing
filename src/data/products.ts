@@ -350,7 +350,10 @@ export const statusLabel: Record<Status, Localized> = {
 
 export const shipping = products.filter((p) => p.category !== "works");
 
-/** Honest numbers derived from the list above (no user counts). */
+/**
+ * Honest numbers derived from the list above (no user counts). The hero adds
+ * total GitHub release downloads from src/lib/github.ts, labelled as such.
+ */
 export function productStats() {
   const platforms = new Set<Platform>();
   shipping.forEach((p) => p.platforms.forEach((x) => platforms.add(x)));

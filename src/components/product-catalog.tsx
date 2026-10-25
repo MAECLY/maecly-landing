@@ -13,6 +13,8 @@ export type CardData = {
   status: string;
   works: boolean;
   version?: string;
+  /** Preformatted "208 downloads"; absent when unknown or zero. */
+  downloads?: string;
   oneLiner: string;
   platforms: string[];
   platformNote?: string;
@@ -32,6 +34,7 @@ type Labels = {
   external: string;
   platforms: string;
   icon: string;
+  downloadsNote: string;
   more: { title: string; body: string; cta: string; href: string };
 };
 
@@ -187,6 +190,14 @@ function ProductCard({ p, labels }: { p: CardData; labels: Labels }) {
 
       <p className="mt-3 font-mono text-[11px] text-muted">
         {labels.license} · {p.license}
+        {p.downloads && (
+          <>
+            {" · "}
+            <span title={labels.downloadsNote} className="whitespace-nowrap">
+              {p.downloads}
+            </span>
+          </>
+        )}
       </p>
 
       {/* One primary action plus icon-only secondary actions, so the row never wraps. */}
