@@ -14,6 +14,7 @@ export function Hero({
   latest,
   publicRepos,
   downloads,
+  downloadsFoot,
 }: {
   lang: Locale;
   t: Dictionary;
@@ -21,6 +22,8 @@ export function Hero({
   publicRepos: number;
   /** Total GitHub release downloads; the stat is hidden unless it is above zero. */
   downloads: number;
+  /** Set when the total also includes a dated store count; shown under the stats. */
+  downloadsFoot?: string;
 }) {
   const stats = productStats();
   const latestProduct = latest ? products.find((p) => p.releasesRepo === latest.repo) : undefined;
@@ -31,7 +34,12 @@ export function Hero({
     [publicRepos, t.hero.stats.repos],
     [stats.platforms.length, t.hero.stats.platforms],
   ];
-  if (downloads > 0) statLine.push([downloads, t.hero.stats.downloads, t.hero.stats.downloadsNote]);
+  if (downloads > 0)
+    statLine.push(
+      downloadsFoot
+        ? [downloads, t.hero.stats.downloadsAll, downloadsFoot]
+        : [downloads, t.hero.stats.downloads, t.hero.stats.downloadsNote],
+    );
 
   return (
     <section id="top" aria-labelledby="hero-title" className="relative isolate overflow-hidden">
@@ -114,6 +122,7 @@ export function Hero({
           <p className="mt-2 font-mono text-[11px] text-muted">
             {stats.platforms.join(" · ")}
           </p>
+          {downloads > 0 && downloadsFoot && <p className="mt-1 font-mono text-[11px] text-muted text-pretty">{downloadsFoot}</p>}
         </div>
 
         <div className="hero-mark relative order-first mx-auto w-full max-w-[120px] sm:max-w-[300px] lg:order-none lg:max-w-[440px]">

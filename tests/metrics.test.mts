@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { sumDownloads } from "../src/lib/github-core.ts";
-import { downloadsLabel, formatCount, totalDownloads } from "../src/lib/metrics.ts";
+import { downloadsLabel, formatCount, formatDate, totalDownloads } from "../src/lib/metrics.ts";
 
 const en = { one: "{n} download", other: "{n} downloads" };
 const es = { one: "{n} descarga", other: "{n} descargas" };
@@ -40,4 +40,9 @@ test("sums every asset of every release", () => {
 test("totals only known positive counts of the listed repos", () => {
   assert.equal(totalDownloads({ a: 40, b: 2, c: 0, d: 100 }, ["a", "b", "c", "missing"]), 42);
   assert.equal(totalDownloads(undefined, ["a"]), 0);
+});
+
+test("formats the as-of date of a store snapshot per locale", () => {
+  assert.equal(formatDate("2026-10-24", "en"), "Oct 24, 2026");
+  assert.equal(formatDate("2026-10-24", "es"), "24 oct 2026");
 });
