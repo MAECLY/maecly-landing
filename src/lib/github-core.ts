@@ -1,6 +1,7 @@
 /**
  * Build-time GitHub data: public repos of the MAECLY org and the latest
- * releases of each product. Unauthenticated public endpoints only.
+ * releases of each product, plus the total release-asset downloads per
+ * product repo. Unauthenticated public endpoints only.
  *
  * Shared by the site (src/lib/github.ts, cached at build) and by
  * scripts/snapshot-github.mts, which refreshes the committed fallback.
@@ -17,6 +18,11 @@ export type GithubData = {
   fetchedAt: string;
   publicRepos: string[];
   releases: Release[];
+  /**
+   * Sum of `download_count` over every asset of every release, per repo.
+   * Release downloads, not users: one person can download many times.
+   */
+  downloads: Record<string, number>;
 };
 
 const API = "https://api.github.com";
@@ -32,7 +38,33 @@ async function getJson<T>(path: string): Promise<T> {
 }
 
 type ApiRepo = { name: string; private: boolean; archived: boolean };
-type ApiRelease = { tag_name: string; published_at: string | null; html_url: string; draft: boolean; prerelease: boolean };
+type ApiRelease = {
+  tag_name: string;
+  published_at: string | null;
+  html_url: string;
+  draft: boolean;
+  prerelease: boolean;
+  assets?: Array<{ download_count?: number }>;
+};
+
+/** Total asset downloads across a list of releases. */
+export function sumDownloads(releases: ApiRelease[]): number {
+  return releases.reduce(
+    (total, r) => total + (r.assets ?? []).reduce((n, a) => n + (Number.isFinite(a.download_count) ? (a.download_count as number) : 0), 0),
+    0,
+  );
+}
+
+/** Every release of a repo, following pagination (100 per page). */
+async function getAllReleases(repo: string): Promise<ApiRelease[]> {
+  const all: ApiRelease[] = [];
+  for (let page = 1; page <= 10; page++) {
+    const list = await getJson<ApiRelease[]>(`/repos/${ORG}/${repo}/releases?per_page=100&page=${page}`);
+    all.push(...list);
+    if (list.length < 100) break;
+  }
+  return all;
+}
 
 /** Fetches everything; throws if any request fails so callers can fall back. */
 export async function fetchGithubData(releaseRepos: string[]): Promise<GithubData> {
@@ -44,16 +76,19 @@ export async function fetchGithubData(releaseRepos: string[]): Promise<GithubDat
 
   const perRepo = await Promise.all(
     releaseRepos.map(async (repo) => {
-      const list = await getJson<ApiRelease[]>(`/repos/${ORG}/${repo}/releases?per_page=5`);
-      return list
+      const list = await getAllReleases(repo);
+      const releases = list
         .filter((r) => !r.draft && !r.prerelease && r.published_at)
+        .slice(0, 5)
         .map<Release>((r) => ({ repo, tag: r.tag_name, publishedAt: r.published_at as string, url: r.html_url }));
+      return { repo, releases, downloads: sumDownloads(list) };
     }),
   );
 
   return {
     fetchedAt: new Date().toISOString(),
     publicRepos,
-    releases: perRepo.flat().sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)),
+    releases: perRepo.flatMap((r) => r.releases).sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)),
+    downloads: Object.fromEntries(perRepo.map((r) => [r.repo, r.downloads])),
   };
 }

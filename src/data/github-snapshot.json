@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-25T17:05:14.930Z",
+  "fetchedAt": "2026-10-25T17:22:36.256Z",
   "publicRepos": [
     "autostand",
     "autostand-landing-page",
@@ -153,5 +153,15 @@
       "publishedAt": "2026-04-20T18:24:50Z",
       "url": "https://github.com/MAECLY/image-transform-lite/releases/tag/v1.3.4"
     }
-  ]
+  ],
+  "downloads": {
+    "coverly-roms": 42,
+    "coverly-shelf": 4,
+    "pluryprint": 67,
+    "autostand": 8,
+    "versorium-app": 208,
+    "gaming-toggles": 10,
+    "id-bridge-ia": 0,
+    "image-transform-lite": 13
+  }
 }
