@@ -3,6 +3,7 @@ import { products } from "@/data/products";
 import { GITHUB_ORG, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Release } from "@/lib/github-core";
+import { RelTime } from "../rel-time";
 import { ExternalMark, SectionHead } from "../ui";
 
 const fmt = (iso: string, lang: Locale) =>
@@ -10,29 +11,36 @@ const fmt = (iso: string, lang: Locale) =>
     new Date(iso),
   );
 
+const DAY = 24 * 3600 * 1000;
+
 export function Shipping({
   lang,
   t,
   releases,
   source,
   fetchedAt,
+  downloads,
 }: {
   lang: Locale;
   t: Dictionary;
   releases: Release[];
   source: "live" | "snapshot";
   fetchedAt: string;
+  /** "208 downloads" per release repo; missing when unknown or zero. */
+  downloads: Record<string, string | undefined>;
 }) {
-  // One line per release, newest first; one per product so one busy
-  // repo doesn't push the others off the list.
-  const perRepo = new Map<string, number>();
+  // One line per product, newest first, so one busy repo doesn't push the
+  // others off the list.
+  const seen = new Set<string>();
   const list = releases
     .filter((r) => {
-      const n = perRepo.get(r.repo) ?? 0;
-      perRepo.set(r.repo, n + 1);
-      return n < 1;
+      if (seen.has(r.repo)) return false;
+      seen.add(r.repo);
+      return true;
     })
     .slice(0, 8);
+  // "Fresh" is measured from when GitHub was read, so the cached page agrees with itself.
+  const fresh = (iso: string) => Date.parse(fetchedAt) - Date.parse(iso) < 14 * DAY;
 
   return (
     <section id="shipping" aria-labelledby="shipping-title" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-24 sm:px-6 sm:py-32">
@@ -48,31 +56,61 @@ export function Shipping({
         </a>
       </div>
 
-      <ol className="reveal mt-12 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
-        {list.map((r) => {
+      <ol className="reveal mt-12 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow)]">
+        {list.map((r, i) => {
           const p = products.find((x) => x.releasesRepo === r.repo);
+          const dl = downloads[r.repo];
+          const isFresh = fresh(r.publishedAt);
           return (
             <li key={`${r.repo}-${r.tag}`}>
               <a
                 href={r.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 px-4 py-4 transition-colors hover:bg-surface-2 sm:grid-cols-[8rem_auto_1fr_auto] sm:px-6"
+                className={`group grid grid-cols-[auto_1fr_auto] items-center gap-4 px-4 py-4 transition-colors hover:bg-surface-2 sm:grid-cols-[9rem_auto_1fr_auto] sm:px-6 ${
+                  i === 0 ? "sm:py-6" : ""
+                }`}
               >
-                <time dateTime={r.publishedAt} className="hidden font-mono text-xs text-muted sm:block">
-                  {fmt(r.publishedAt, lang)}
-                </time>
+                <span className="hidden items-center gap-2 font-mono text-xs text-muted sm:flex">
+                  <span
+                    className={`size-1.5 shrink-0 rounded-[2px] ${isFresh ? "ship-fresh bg-gold" : "bg-line-strong"}`}
+                    aria-hidden="true"
+                  />
+                  <RelTime iso={r.publishedAt} lang={lang} fallback={fmt(r.publishedAt, lang)} />
+                </span>
                 {p ? (
-                  <Image src={p.icon} alt="" width={32} height={32} unoptimized={p.icon.endsWith(".svg")} className="size-8 rounded-[22%]" />
+                  <Image
+                    src={p.icon}
+                    alt=""
+                    width={40}
+                    height={40}
+                    unoptimized={p.icon.endsWith(".svg")}
+                    className={`rounded-[22%] transition-transform group-hover:scale-105 ${i === 0 ? "size-10" : "size-8"}`}
+                  />
                 ) : (
                   <span className="size-8 rounded-[22%] bg-surface-2" aria-hidden="true" />
                 )}
                 <span className="min-w-0">
-                  <span className="font-medium">{p?.name ?? r.repo}</span>{" "}
-                  <span className="font-mono text-sm text-accent-ink">{r.tag}</span>
-                  <time dateTime={r.publishedAt} className="block font-mono text-xs text-muted sm:hidden">
-                    {fmt(r.publishedAt, lang)}
-                  </time>
+                  <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className={i === 0 ? "font-display text-lg font-bold tracking-tight" : "font-medium"}>
+                      {p?.name ?? r.repo}
+                    </span>
+                    <span className="font-mono text-sm text-accent-ink">{r.tag}</span>
+                    {i === 0 && (
+                      <span className="rounded-full bg-gold px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider text-maecly-ink">
+                        {t.shipping.latest}
+                      </span>
+                    )}
+                  </span>
+                  <span className="mt-0.5 block font-mono text-xs text-muted">
+                    <RelTime iso={r.publishedAt} lang={lang} fallback={fmt(r.publishedAt, lang)} className="sm:hidden" />
+                    {dl && (
+                      <>
+                        <span className="sm:hidden"> · </span>
+                        {dl}
+                      </>
+                    )}
+                  </span>
                 </span>
                 <span className="text-sm text-muted transition-colors group-hover:text-fg">
                   <span className="hidden sm:inline">{t.shipping.notes} </span>
@@ -83,8 +121,14 @@ export function Shipping({
           );
         })}
       </ol>
-      <p className="mt-3 font-mono text-[11px] text-muted">
-        {source === "snapshot" ? t.shipping.snapshot : t.shipping.live} {fmt(fetchedAt, lang)} · api.github.com
+      <p className="mt-3 flex flex-wrap items-center gap-x-2 font-mono text-[11px] text-muted">
+        <span
+          className={`inline-block size-1.5 rounded-full ${source === "live" ? "bg-emerald-500" : "bg-line-strong"}`}
+          aria-hidden="true"
+        />
+        {source === "snapshot" ? t.shipping.snapshot : t.shipping.live}{" "}
+        <RelTime iso={fetchedAt} lang={lang} fallback={fmt(fetchedAt, lang)} />
+        <span aria-hidden="true">·</span> api.github.com
       </p>
     </section>
   );

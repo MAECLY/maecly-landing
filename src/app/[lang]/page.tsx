@@ -182,6 +182,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         lang={lang}
         t={t}
         latest={gh.releases[0]}
+        fetchedAt={gh.fetchedAt}
         publicRepos={gh.publicRepos.length}
         downloads={totalAll}
         downloadsFoot={downloadsFoot}
@@ -229,7 +230,18 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <Principles t={t} />
       <Maker t={t} />
       <CellDivider gold={40} />
-      <Shipping lang={lang} t={t} releases={gh.releases} source={gh.source} fetchedAt={gh.fetchedAt} />
+      <Shipping
+        lang={lang}
+        t={t}
+        releases={gh.releases}
+        source={gh.source}
+        fetchedAt={gh.fetchedAt}
+        downloads={Object.fromEntries(
+          products.flatMap((p) =>
+            p.releasesRepo ? [[p.releasesRepo, downloadsLabel(downloadsOf(p), lang, t.products.downloads)]] : [],
+          ),
+        )}
+      />
       <CellDivider gold={17} />
       <Press lang={lang} t={t} />
     </>

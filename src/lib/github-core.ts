@@ -1,5 +1,5 @@
 /**
- * Build-time GitHub data: public repos of the MAECLY org and the latest
+ * GitHub data for the site: public repos of the MAECLY org and the latest
  * releases of each product, plus the total release-asset downloads per
  * product repo. Unauthenticated public endpoints only.
  *
@@ -29,8 +29,15 @@ const API = "https://api.github.com";
 const ORG = "MAECLY";
 
 async function getJson<T>(path: string): Promise<T> {
+  // Optional read-only token: anonymous calls share 60 requests an hour per
+  // IP, which serverless IPs exhaust; a token raises that to 5,000.
+  const token = process.env.GITHUB_TOKEN;
   const res = await fetch(`${API}${path}`, {
-    headers: { Accept: "application/vnd.github+json", "User-Agent": "maecly-landing-build" },
+    headers: {
+      Accept: "application/vnd.github+json",
+      "User-Agent": "maecly-landing",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) throw new Error(`GitHub ${path} → ${res.status}`);
