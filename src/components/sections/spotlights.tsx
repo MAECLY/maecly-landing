@@ -8,10 +8,15 @@ import { ExternalMark, SectionHead } from "../ui";
 
 type Shot = { light: string; dark?: string };
 
-const SPOTLIGHTS: Array<{ slug: "coverly-roms" | "pluryprint" | "autostand"; shot: Shot }> = [
+/** A screenshot, optionally with a Spanish capture of the same screen. */
+const SPOTLIGHTS: Array<{ slug: "coverly-roms" | "pluryprint" | "versorium"; shot: Shot; shotEs?: Shot }> = [
   { slug: "coverly-roms", shot: { light: "/shots/coverly-roms-library-light.webp", dark: "/shots/coverly-roms-library-dark.webp" } },
   { slug: "pluryprint", shot: { light: "/shots/pluryprint-queue-light.webp", dark: "/shots/pluryprint-queue-dark.webp" } },
-  { slug: "autostand", shot: { light: "/shots/autostand-dashboard-light.webp" } },
+  {
+    slug: "versorium",
+    shot: { light: "/shots/versorium-corkboard-light.webp", dark: "/shots/versorium-corkboard-dark.webp" },
+    shotEs: { light: "/shots/versorium-corkboard-es-light.webp", dark: "/shots/versorium-corkboard-es-dark.webp" },
+  },
 ];
 
 export function Spotlights({ lang, t }: { lang: Locale; t: Dictionary }) {
@@ -20,7 +25,8 @@ export function Spotlights({ lang, t }: { lang: Locale; t: Dictionary }) {
       <SectionHead id="spotlight-title" eyebrow={t.spotlight.eyebrow} title={t.spotlight.title} />
 
       <div className="mt-16 space-y-24 sm:mt-20 sm:space-y-32">
-        {SPOTLIGHTS.map(({ slug, shot }, i) => {
+        {SPOTLIGHTS.map(({ slug, shot: shotEn, shotEs }, i) => {
+          const shot = lang === "es" && shotEs ? shotEs : shotEn;
           const p = productBySlug(slug);
           if (!p) return null;
           const copy = t.spotlight.items[slug];
