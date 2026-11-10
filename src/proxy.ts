@@ -7,6 +7,9 @@ import { NextResponse, type NextRequest } from "next/server";
  * global-not-found page with a 404 status instead.
  */
 export function proxy(request: NextRequest) {
+  // Next.js widens every matcher with an optional `.json` suffix, so
+  // /catalog.json (a route handler) reaches here too: let it through.
+  if (request.nextUrl.pathname === "/catalog.json") return NextResponse.next();
   return NextResponse.rewrite(new URL("/en/__not-found", request.url));
 }
 
