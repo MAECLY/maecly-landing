@@ -85,7 +85,7 @@ export const products: Product[] = [
     slug: "coverly-shelf",
     name: "Coverly Shelf",
     category: "gaming",
-    status: "early",
+    status: "store",
     oneLiner: {
       en: "Browser extension that adds box art and screenshots to 3DS game pages. Purely cosmetic: it never touches downloads or how the site works.",
       es: "Extensión de navegador que añade carátulas y capturas a las páginas de juegos de 3DS. Puramente cosmética: nunca toca las descargas ni el funcionamiento del sitio.",
@@ -100,8 +100,8 @@ export const products: Product[] = [
     site: { en: "https://coverly-shelf.maecly.com/en/", es: "https://coverly-shelf.maecly.com/" },
     repo: "https://github.com/MAECLY/coverly-shelf",
     download: {
-      href: "https://github.com/MAECLY/coverly-shelf/releases/latest",
-      label: { en: "Download", es: "Descargar" },
+      href: "https://chromewebstore.google.com/detail/coverly-shelf/ahafjflkfcijeoaggjhjpgekbchjpfie",
+      label: { en: "Chrome Web Store", es: "Chrome Web Store" },
     },
     releasesRepo: "coverly-shelf",
   },
